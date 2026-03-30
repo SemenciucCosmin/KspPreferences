@@ -23,5 +23,6 @@ dependencyResolutionManagement {
 rootProject.name = "KspPreferences"
 include(
     ":sample",
-    ":library"
+    ":annotations",
+    ":ksp-processor"
 )

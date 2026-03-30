@@ -1,4 +1,4 @@
-package com.ksppreferences.sample.ui.component
+package annotations.ksppreferences.sample.ui.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

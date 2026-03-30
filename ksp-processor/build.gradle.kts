@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace = "com.ksppreferences"
+    namespace = "com.ksppreferences.kspprocessor"
     compileSdk {
         version = release(libs.versions.compileSdk.get().toInt()) {
             minorApiLevel = 1

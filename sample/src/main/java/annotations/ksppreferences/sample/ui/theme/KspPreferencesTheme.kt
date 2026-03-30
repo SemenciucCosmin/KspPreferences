@@ -1,4 +1,4 @@
-package com.ksppreferences.sample.ui.theme
+package annotations.ksppreferences.sample.ui.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
