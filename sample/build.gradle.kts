@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
+    alias(libs.plugins.google.ksp)
     alias(libs.plugins.kotlin.compose)
 }
 
@@ -51,4 +52,8 @@ dependencies {
     implementation(libs.androidx.compose.material3)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
+
+    // KSP PREFERENCES MODULES
+    implementation(projects.annotations)
+    ksp(projects.kspProcessor)
 }

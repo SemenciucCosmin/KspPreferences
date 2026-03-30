@@ -6,21 +6,21 @@ minSdk = "26"
 targetSdk = "36"
 
 # ANDROIDX
-appcompat = "1.7.1"
 core-ktx = "1.18.0"
 lifecycle-runtime-ktx = "2.10.0"
 
 # COMPOSE
 activity-compose = "1.13.0"
 compose-bom = "2026.03.01"
-material = "1.13.0"
 
 # KOTLIN
 kotlin = "2.2.10"
 
+# KSP
+ksp = "2.2.10-2.0.2"
+
 [libraries]
 # ANDROIDX
-androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle-runtime-ktx" }
 
@@ -33,10 +33,13 @@ androidx-compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-toolin
 androidx-compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 androidx-compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
-material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+
+# KSP
+symbol-processing = { group = "com.google.devtools.ksp", name = "symbol-processing-api", version.ref = "ksp" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
+google-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 
