@@ -3,6 +3,7 @@ package com.ksppreferences.kspprocessor.usecase
 import com.google.devtools.ksp.KspExperimental
 import com.google.devtools.ksp.isAnnotationPresent
 import com.google.devtools.ksp.symbol.KSFunctionDeclaration
+import com.google.devtools.ksp.symbol.Modifier
 import com.ksppreferences.annotations.Get
 import com.ksppreferences.annotations.GetFlow
 import com.ksppreferences.annotations.Set
@@ -19,6 +20,11 @@ internal class ValidateFunctionDeclarationUseCase(
     @OptIn(KspExperimental::class)
     operator fun invoke(function: KSFunctionDeclaration): Boolean {
         val functionName = function.simpleName.asString()
+        if (!function.modifiers.contains(Modifier.SUSPEND)) {
+            logger.logNonSuspendingFunctionError(functionName)
+            return false
+        }
+
         val accessorAnnotation = AccessorAnnotations.all.firstOrNull {
             function.isAnnotationPresent(it)
         }

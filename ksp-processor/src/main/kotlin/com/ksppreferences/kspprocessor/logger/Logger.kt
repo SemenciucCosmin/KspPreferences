@@ -50,4 +50,13 @@ internal class Logger(private val logger: KSPLogger) {
             """.trimIndent()
         )
     }
+
+    fun logNonSuspendingFunctionError(functionName: String) {
+        logger.error(
+            """
+            Function $functionName is not a suspending function.
+            Please ensure that $functionName is a suspending function.
+            """.trimIndent()
+        )
+    }
 }

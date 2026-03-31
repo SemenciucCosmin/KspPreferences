@@ -53,6 +53,9 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 
+    // DATA STORE
+    implementation(libs.data.store)
+
     // KSP PREFERENCES MODULES
     implementation(projects.annotations)
     ksp(projects.kspProcessor)

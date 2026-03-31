@@ -2,7 +2,7 @@ package com.ksppreferences.annotations
 
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.SOURCE)
-annotation class ShortPreference(
+annotation class ByteArrayPreference(
     val key: String,
-    val defaultValue: Short = 0
+    val defaultValue: ByteArray = []
 )

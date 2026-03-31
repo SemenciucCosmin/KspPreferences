@@ -13,6 +13,9 @@ lifecycle-runtime-ktx = "2.10.0"
 activity-compose = "1.13.0"
 compose-bom = "2026.03.01"
 
+# DATA STORE
+data-store = "1.2.0"
+
 # KOTLIN
 kotlin = "2.2.10"
 kotlinx-coroutines = "1.10.2"
@@ -34,6 +37,9 @@ androidx-compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-toolin
 androidx-compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 androidx-compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
+
+# DATA STORE
+data-store = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "data-store" }
 
 # KOTLIN
 kotlinx-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
