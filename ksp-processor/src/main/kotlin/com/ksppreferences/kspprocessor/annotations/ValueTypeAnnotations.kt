@@ -23,5 +23,5 @@ internal object ValueTypeAnnotations {
         StringPreference::class,
     )
 
-    val allString = all.joinToString(", ") { it.toString() }
+    val allString = all.mapNotNull { it.simpleName }.toString()
 }

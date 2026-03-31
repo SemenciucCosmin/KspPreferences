@@ -1,7 +1,6 @@
 package com.ksppreferences.kspprocessor.logger
 
 import com.google.devtools.ksp.processing.KSPLogger
-import com.ksppreferences.kspprocessor.annotations.ValueTypeAnnotations
 
 internal class Logger(private val logger: KSPLogger) {
 

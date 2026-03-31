@@ -11,6 +11,6 @@ internal object AccessorAnnotations {
         Set::class
     )
 
-    val allString = all.joinToString(", ") { it.toString() }
+    val allString = all.mapNotNull { it.simpleName }.toString()
 }
 
