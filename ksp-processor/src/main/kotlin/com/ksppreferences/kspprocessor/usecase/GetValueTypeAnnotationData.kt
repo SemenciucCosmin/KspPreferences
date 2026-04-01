@@ -8,7 +8,7 @@ import com.ksppreferences.kspprocessor.annotations.ValueTypeAnnotations
 internal class GetValueTypeAnnotationData {
 
     @OptIn(KspExperimental::class)
-    operator fun invoke(function: KSFunctionDeclaration): Triple<String?, Any?, String?> {
+    operator fun invoke(function: KSFunctionDeclaration): Triple<String?, String?, String?> {
         val valueTypeAnnotation = ValueTypeAnnotations.all.firstOrNull {
             function.isAnnotationPresent(it)
         }
@@ -27,7 +27,7 @@ internal class GetValueTypeAnnotationData {
 
         val preferencesDefaultValueTypeName = when (preferencesDefaultValue) {
             is Boolean -> Boolean::class.simpleName
-            is ByteArray -> ByteArray::class.simpleName
+            is List<*> -> ByteArray::class.simpleName
             is Double -> Double::class.simpleName
             is Float -> Float::class.simpleName
             is Int -> Int::class.simpleName
@@ -36,9 +36,19 @@ internal class GetValueTypeAnnotationData {
             else -> Any::class.simpleName
         }
 
+
         val defaultValue = when (preferencesDefaultValue) {
+            is List<*> -> {
+                preferencesDefaultValue.toString()
+                    .replace("[", "byteArrayOf(")
+                    .replace("]", ")")
+            }
+
+            is Float -> "${preferencesDefaultValue}f"
+
             is String -> "\"$preferencesDefaultValue\""
-            else -> preferencesDefaultValue
+
+            else -> preferencesDefaultValue.toString()
         }
 
         return Triple(

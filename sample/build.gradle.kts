@@ -58,6 +58,10 @@ dependencies {
     // DATA STORE
     implementation(libs.data.store)
 
+    // KOIN
+    implementation(platform(libs.koin.bom))
+    implementation(libs.koin.core)
+
     // KSP PREFERENCES MODULES
     implementation(projects.annotations)
     ksp(projects.kspProcessor)

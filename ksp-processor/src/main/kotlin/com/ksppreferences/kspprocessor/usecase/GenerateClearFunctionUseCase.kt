@@ -6,7 +6,6 @@ internal class GenerateClearFunctionUseCase {
 
     @OptIn(KspExperimental::class)
     operator fun invoke(functionName: String): String {
-        println("GenerateClearFunctionUseCase")
         return buildString {
             appendLine(
                 """ 
