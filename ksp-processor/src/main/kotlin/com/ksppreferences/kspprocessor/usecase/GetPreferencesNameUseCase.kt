@@ -3,18 +3,29 @@ package com.ksppreferences.kspprocessor.usecase
 import com.google.devtools.ksp.KspExperimental
 import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.ksppreferences.annotations.Preferences
+import com.ksppreferences.kspprocessor.logger.Logger
 
-internal class GetPreferencesNameUseCase {
+internal class GetPreferencesNameUseCase(
+    private val logger: Logger
+) {
 
     @OptIn(KspExperimental::class)
     operator fun invoke(interfaceDeclaration: KSClassDeclaration): String {
+        val interfaceName = interfaceDeclaration.simpleName.asString()
         val annotation = interfaceDeclaration.annotations.firstOrNull {
             it.shortName.asString() == Preferences::class.simpleName
-        } ?: return PREFERENCES_DEFAULT_NAME
+        }
 
-        return annotation.arguments.firstOrNull {
+        val name = annotation?.arguments?.firstOrNull {
             it.name?.asString() == PREFERENCES_NAME
-        }?.value as? String ?: PREFERENCES_DEFAULT_NAME
+        }?.value as? String
+
+        if (name == null) {
+            logger.logMisingPreferencesNameError(interfaceName)
+            return PREFERENCES_DEFAULT_NAME
+        }
+
+        return name
     }
 
     companion object {

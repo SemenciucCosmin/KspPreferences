@@ -4,9 +4,11 @@ import com.google.devtools.ksp.KspExperimental
 import com.google.devtools.ksp.processing.CodeGenerator
 import com.google.devtools.ksp.processing.Dependencies
 import com.google.devtools.ksp.symbol.KSClassDeclaration
+import com.ksppreferences.kspprocessor.logger.Logger
 import kotlin.sequences.forEach
 
 internal class GenerateImplementationUseCase(
+    private val logger: Logger,
     private val codeGenerator: CodeGenerator,
     private val generateImportsUseCase: GenerateImportsUseCase,
     private val generateFunctionUseCase: GenerateFunctionUseCase,
@@ -36,7 +38,7 @@ internal class GenerateImplementationUseCase(
             )
 
             interfaceDeclaration.getAllFunctions().forEach { function ->
-                generateFunctionUseCase(function)?.let {
+                generateFunctionUseCase(interfaceName, function)?.let {
                     appendLine()
                     append(it)
                 }
@@ -48,8 +50,14 @@ internal class GenerateImplementationUseCase(
             appendLine("}")
         }
 
+        val interfaceFile = interfaceDeclaration.containingFile
+        if (interfaceFile == null) {
+            logger.logMisingInterfaceFileError(interfaceName)
+            return
+        }
+
         val file = codeGenerator.createNewFile(
-            dependencies = Dependencies(false, interfaceDeclaration.containingFile ?: return),
+            dependencies = Dependencies(false, interfaceFile),
             packageName = packageName,
             fileName = implementationName
         )

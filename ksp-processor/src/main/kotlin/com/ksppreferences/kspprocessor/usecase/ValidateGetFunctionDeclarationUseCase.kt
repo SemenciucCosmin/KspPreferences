@@ -5,7 +5,6 @@ import com.google.devtools.ksp.isAnnotationPresent
 import com.google.devtools.ksp.symbol.KSFunctionDeclaration
 import com.ksppreferences.annotations.Get
 import com.ksppreferences.kspprocessor.annotations.ValueTypeAnnotations
-import com.ksppreferences.kspprocessor.extension.ifNot
 import com.ksppreferences.kspprocessor.logger.Logger
 
 internal class ValidateGetFunctionDeclarationUseCase(
@@ -14,31 +13,36 @@ internal class ValidateGetFunctionDeclarationUseCase(
 ) {
 
     @OptIn(KspExperimental::class)
-    operator fun invoke(function: KSFunctionDeclaration): Boolean {
+    operator fun invoke(
+        interfaceName: String,
+        function: KSFunctionDeclaration
+    ): Boolean {
         val functionName = function.simpleName.asString()
         val valueTypeAnnotation = ValueTypeAnnotations.all.firstOrNull {
             function.isAnnotationPresent(it)
-        } ?: return false
+        }
 
         val preferencesDefaultValueType = getValueTypeAnnotationData(
             function = function
-        ).third ?: return false
+        ).third
 
         val declaration = function.returnType?.resolve()?.declaration
-        val returnType = declaration?.simpleName?.asString() ?: return false
+        val returnType = declaration?.simpleName?.asString()
 
         if (function.parameters.isNotEmpty()) {
             logger.logParameterOverloadError(
+                interfaceName = interfaceName,
                 functionName = functionName,
             )
         }
 
         if (preferencesDefaultValueType != returnType) {
             logger.logMismatchedReturnTypeError(
+                interfaceName = interfaceName,
                 functionName = functionName,
                 accessorAnnotation = Get::class.simpleName ?: return false,
-                valueTypeAnnotation = valueTypeAnnotation.simpleName ?: return false,
-                expectedReturnType = preferencesDefaultValueType,
+                valueTypeAnnotation = valueTypeAnnotation?.simpleName ?: return false,
+                expectedReturnType = preferencesDefaultValueType ?: return false,
             )
         }
 

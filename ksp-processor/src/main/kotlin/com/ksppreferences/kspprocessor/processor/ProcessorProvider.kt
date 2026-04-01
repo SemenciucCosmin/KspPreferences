@@ -26,51 +26,114 @@ internal class ProcessorProvider : SymbolProcessorProvider {
 
     override fun create(environment: SymbolProcessorEnvironment): SymbolProcessor {
         val logger = Logger(environment.logger)
+        val getValueTypeAnnotationData by lazy {
+            GetValueTypeAnnotationData()
+        }
+
+        val validateGetFunctionDeclarationUseCase by lazy {
+            ValidateGetFunctionDeclarationUseCase(
+                logger = logger,
+                getValueTypeAnnotationData = getValueTypeAnnotationData
+            )
+        }
+
+        val validateGetFlowFunctionDeclarationUseCase by lazy {
+            ValidateGetFlowFunctionDeclarationUseCase(
+                logger = logger,
+                getValueTypeAnnotationData = getValueTypeAnnotationData
+            )
+        }
+
+        val validateSetFunctionDeclarationUseCase by lazy {
+            ValidateSetFunctionDeclarationUseCase(
+                logger = logger,
+                getValueTypeAnnotationData = getValueTypeAnnotationData
+            )
+        }
+
+        val validateClearFunctionDeclarationUseCase by lazy {
+            ValidateClearFunctionDeclarationUseCase(
+                logger = logger
+            )
+        }
+
         val validateFunctionAnnotationsUseCase by lazy {
-            ValidateFunctionAnnotationsUseCase(logger)
+            ValidateFunctionAnnotationsUseCase(
+                logger = logger
+            )
         }
 
         val validateFunctionDeclarationUseCase by lazy {
             ValidateFunctionDeclarationUseCase(
-                logger,
-                ValidateGetFunctionDeclarationUseCase(logger, GetValueTypeAnnotationData()),
-                ValidateGetFlowFunctionDeclarationUseCase(logger, GetValueTypeAnnotationData()),
-                ValidateSetFunctionDeclarationUseCase(logger, GetValueTypeAnnotationData()),
-                ValidateClearFunctionDeclarationUseCase(logger)
+                logger = logger,
+                validateGetFunctionDeclarationUseCase = validateGetFunctionDeclarationUseCase,
+                validateGetFlowFunctionDeclarationUseCase = validateGetFlowFunctionDeclarationUseCase,
+                validateSetFunctionDeclarationUseCase = validateSetFunctionDeclarationUseCase,
+                validateClearFunctionDeclarationUseCase = validateClearFunctionDeclarationUseCase
             )
         }
 
         val validateInterfaceUseCase by lazy {
             ValidateInterfaceUseCase(
-                validateFunctionAnnotationsUseCase,
-                validateFunctionDeclarationUseCase,
+                logger = logger,
+                validateFunctionAnnotationsUseCase = validateFunctionAnnotationsUseCase,
+                validateFunctionDeclarationUseCase = validateFunctionDeclarationUseCase
             )
+        }
+
+        val generateGetFunctionUseCase by lazy {
+            GenerateGetFunctionUseCase()
+        }
+
+        val generateGetFlowFunctionUseCase by lazy {
+            GenerateGetFlowFunctionUseCase()
+        }
+
+        val generateSetFunctionUseCase by lazy {
+            GenerateSetFunctionUseCase()
+        }
+
+        val generateClearFunctionUseCase by lazy {
+            GenerateClearFunctionUseCase()
         }
 
         val generateFunctionUseCase by lazy {
             GenerateFunctionUseCase(
-                generateGetFunctionUseCase = GenerateGetFunctionUseCase(),
-                generateGetFlowFunctionUseCase = GenerateGetFlowFunctionUseCase(),
-                generateSetFunctionUseCase = GenerateSetFunctionUseCase(),
-                generateClearFunctionUseCase = GenerateClearFunctionUseCase(),
-                getValueTypeAnnotationData = GetValueTypeAnnotationData()
+                logger = logger,
+                generateGetFunctionUseCase = generateGetFunctionUseCase,
+                generateGetFlowFunctionUseCase = generateGetFlowFunctionUseCase,
+                generateSetFunctionUseCase = generateSetFunctionUseCase,
+                generateClearFunctionUseCase = generateClearFunctionUseCase,
+                getValueTypeAnnotationData = getValueTypeAnnotationData
+            )
+        }
+
+        val getPreferencesNameUseCase by lazy {
+            GetPreferencesNameUseCase(
+                logger = logger
             )
         }
 
         val generateCompanionObjectUseCase by lazy {
             GenerateCompanionObjectUseCase(
-                getValueTypeAnnotationData = GetValueTypeAnnotationData(),
-                getPreferencesNameUseCase = GetPreferencesNameUseCase()
+                logger = logger,
+                getValueTypeAnnotationData = getValueTypeAnnotationData,
+                getPreferencesNameUseCase = getPreferencesNameUseCase
             )
+        }
+
+        val generateImportsUseCase by lazy {
+            GenerateImportsUseCase()
         }
 
         val generateImplementationUseCase by lazy {
             GenerateImplementationUseCase(
+                logger = logger,
                 codeGenerator = environment.codeGenerator,
                 generateFunctionUseCase = generateFunctionUseCase,
-                generateImportsUseCase = GenerateImportsUseCase(),
+                generateImportsUseCase = generateImportsUseCase,
                 generateCompanionObjectUseCase = generateCompanionObjectUseCase,
-                getPreferencesNameUseCase = GetPreferencesNameUseCase()
+                getPreferencesNameUseCase = getPreferencesNameUseCase
             )
         }
 

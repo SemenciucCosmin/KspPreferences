@@ -3,28 +3,25 @@ package com.ksppreferences.kspprocessor.usecase
 import com.google.devtools.ksp.KspExperimental
 import com.google.devtools.ksp.isAnnotationPresent
 import com.google.devtools.ksp.symbol.KSClassDeclaration
-import com.google.devtools.ksp.symbol.KSFunctionDeclaration
-import com.ksppreferences.annotations.BooleanPreference
-import com.ksppreferences.annotations.ByteArrayPreference
-import com.ksppreferences.annotations.DoublePreference
-import com.ksppreferences.annotations.FloatPreference
-import com.ksppreferences.annotations.Get
-import com.ksppreferences.annotations.GetFlow
-import com.ksppreferences.annotations.IntPreference
-import com.ksppreferences.annotations.LongPreference
-import com.ksppreferences.annotations.Set
-import com.ksppreferences.annotations.StringPreference
-import com.ksppreferences.kspprocessor.annotations.AccessorAnnotations
+import com.ksppreferences.kspprocessor.annotations.ValueTypeAnnotations
+import com.ksppreferences.kspprocessor.logger.Logger
 
 internal class GenerateCompanionObjectUseCase(
+    private val logger: Logger,
     private val getValueTypeAnnotationData: GetValueTypeAnnotationData,
     private val getPreferencesNameUseCase: GetPreferencesNameUseCase,
 ) {
 
     @OptIn(KspExperimental::class)
     operator fun invoke(interfaceDeclaration: KSClassDeclaration): String? {
+        val interfaceName = interfaceDeclaration.simpleName.asString()
         val preferencesName = getPreferencesNameUseCase(interfaceDeclaration)
-        val preferencesPairs = interfaceDeclaration.getAllFunctions().mapNotNull { function ->
+        val valueTypeFunctions = interfaceDeclaration.getAllFunctions().filter { function ->
+            ValueTypeAnnotations.all.any { function.isAnnotationPresent(it) }
+        }
+
+        val preferencesPairs = valueTypeFunctions.mapNotNull { function ->
+            val functionName = function.simpleName.asString()
             val (preferencesKeyName, _, preferencesDefaultValueType) = getValueTypeAnnotationData(
                 function = function
             )
@@ -37,13 +34,22 @@ internal class GenerateCompanionObjectUseCase(
                 Int::class.simpleName -> INT_PREFERENCES_KEY_NAME
                 Long::class.simpleName -> LONG_PREFERENCES_KEY_NAME
                 String::class.simpleName -> STRING_PREFERENCES_KEY_NAME
-                else -> return@mapNotNull null
+                else -> {
+                    logger.logMissingFunctionAnnotationDataError(
+                        interfaceName = interfaceName,
+                        functionName = functionName
+                    )
+                    return@mapNotNull null
+                }
             }
 
             preferencesKeyName to preferencesType
         }.distinctBy { (preferencesKeyName, _) -> preferencesKeyName }.toList()
 
-        if (preferencesPairs.isEmpty()) return null
+        if (preferencesPairs.isEmpty()) {
+            logger.logMissingInterfaceAnnotationDataError(interfaceName)
+            return null
+        }
 
         return buildString {
             appendLine(

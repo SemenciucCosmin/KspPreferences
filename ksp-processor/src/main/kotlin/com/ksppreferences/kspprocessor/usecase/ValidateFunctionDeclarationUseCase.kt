@@ -21,7 +21,10 @@ internal class ValidateFunctionDeclarationUseCase(
 ) {
 
     @OptIn(KspExperimental::class)
-    operator fun invoke(function: KSFunctionDeclaration): Boolean {
+    operator fun invoke(
+        interfaceName: String,
+        function: KSFunctionDeclaration,
+    ): Boolean {
         val functionName = function.simpleName.asString()
         val accessorAnnotation = AccessorAnnotations.all.firstOrNull {
             function.isAnnotationPresent(it)
@@ -34,17 +37,40 @@ internal class ValidateFunctionDeclarationUseCase(
         val isSuspendFunction = function.modifiers.contains(Modifier.SUSPEND)
         val isFlowFunction = accessorAnnotation == GetFlow::class
         if (isFlowFunction && isSuspendFunction) {
-            logger.logNonSuspendingFunctionError(functionName)
+            logger.logNonSuspendingFunctionError(
+                interfaceName = interfaceName,
+                functionName = functionName
+            )
             return false
         }
 
         return when {
-            accessorAnnotation == Get::class -> validateGetFunctionDeclarationUseCase(function)
-            accessorAnnotation == GetFlow::class -> validateGetFlowFunctionDeclarationUseCase(function)
-            accessorAnnotation == Set::class -> validateSetFunctionDeclarationUseCase(function)
-            functionalAnnotations == Clear::class -> validateClearFunctionDeclarationUseCase(function)
+            accessorAnnotation == Get::class -> validateGetFunctionDeclarationUseCase(
+                interfaceName = interfaceName,
+                function = function
+            )
+
+            accessorAnnotation == GetFlow::class -> validateGetFlowFunctionDeclarationUseCase(
+                interfaceName = interfaceName,
+                function = function
+            )
+
+            accessorAnnotation == Set::class -> validateSetFunctionDeclarationUseCase(
+                interfaceName = interfaceName,
+                function = function
+            )
+
+            functionalAnnotations == Clear::class -> validateClearFunctionDeclarationUseCase(
+                interfaceName = interfaceName,
+                function = function
+            )
+
             else -> {
-                logger.logMissingAnnotationError(functionName, AccessorAnnotations.allString)
+                logger.logMissingAnnotationError(
+                    interfaceName = interfaceName,
+                    functionName = functionName,
+                    expectedAnnotations = AccessorAnnotations.allString
+                )
                 false
             }
         }

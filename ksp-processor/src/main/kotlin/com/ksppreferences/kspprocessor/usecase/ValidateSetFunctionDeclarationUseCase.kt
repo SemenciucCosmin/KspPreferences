@@ -2,7 +2,6 @@ package com.ksppreferences.kspprocessor.usecase
 
 import com.google.devtools.ksp.KspExperimental
 import com.google.devtools.ksp.symbol.KSFunctionDeclaration
-import com.ksppreferences.annotations.Clear
 import com.ksppreferences.kspprocessor.extension.ifNot
 import com.ksppreferences.kspprocessor.logger.Logger
 
@@ -12,7 +11,10 @@ internal class ValidateSetFunctionDeclarationUseCase(
 ) {
 
     @OptIn(KspExperimental::class)
-    operator fun invoke(function: KSFunctionDeclaration): Boolean {
+    operator fun invoke(
+        interfaceName: String,
+        function: KSFunctionDeclaration
+    ): Boolean {
         val functionName = function.simpleName.asString()
         val declaration = function.returnType?.resolve()?.declaration
         val returnType = declaration?.qualifiedName?.asString()
@@ -25,6 +27,7 @@ internal class ValidateSetFunctionDeclarationUseCase(
 
         return (hasNoReturnType && isMatchingParameterType).ifNot {
             logger.logUnnecessaryReturnTypeError(
+                interfaceName = interfaceName,
                 functionName = functionName,
                 annotation = Set::class.simpleName ?: return@ifNot
             )

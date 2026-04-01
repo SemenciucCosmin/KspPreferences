@@ -13,7 +13,10 @@ internal class ValidateFunctionAnnotationsUseCase(
 ) {
 
     @OptIn(KspExperimental::class)
-    operator fun invoke(function: KSFunctionDeclaration): Boolean {
+    operator fun invoke(
+        interfaceName: String,
+        function: KSFunctionDeclaration
+    ): Boolean {
         val functionName = function.simpleName.asString()
 
         val accessorAnnotationsCount = AccessorAnnotations.all.count {
@@ -36,32 +39,56 @@ internal class ValidateFunctionAnnotationsUseCase(
         val hasValueTypeAnnotation = valueTypeAnnotationsCount == MAX_ANNOTATION_COUNT
 
         if (isAccessorAnnotationOverload) {
-            logger.logConflictingAnnotationsError(functionName, AccessorAnnotations.allString)
+            logger.logConflictingAnnotationsError(
+                interfaceName = interfaceName,
+                functionName = functionName,
+                expectedAnnotations = AccessorAnnotations.allString
+            )
             return false
         }
 
         if (isFunctionalAnnotationOverload) {
-            logger.logConflictingAnnotationsError(functionName, FunctionalAnnotations.allString)
+            logger.logConflictingAnnotationsError(
+                interfaceName = interfaceName,
+                functionName = functionName,
+                expectedAnnotations = FunctionalAnnotations.allString
+            )
             return false
         }
 
         if (isValueTypeAnnotationOverload) {
-            logger.logConflictingAnnotationsError(functionName, ValueTypeAnnotations.allString)
+            logger.logConflictingAnnotationsError(
+                interfaceName = interfaceName,
+                functionName = functionName,
+                expectedAnnotations = ValueTypeAnnotations.allString
+            )
             return false
         }
 
         if (hasFunctionalAnnotation && (hasAccessorAnnotation || hasValueTypeAnnotation)) {
-            logger.logConflictingAnnotationsError(functionName, FunctionalAnnotations.allString)
+            logger.logConflictingAnnotationsError(
+                interfaceName = interfaceName,
+                functionName = functionName,
+                expectedAnnotations = FunctionalAnnotations.allString
+            )
             return false
         }
 
         if (!hasFunctionalAnnotation && (!hasAccessorAnnotation && hasValueTypeAnnotation)) {
-            logger.logMissingAnnotationError(functionName, AccessorAnnotations.allString)
+            logger.logMissingAnnotationError(
+                interfaceName = interfaceName,
+                functionName = functionName,
+                expectedAnnotations = AccessorAnnotations.allString
+            )
             return false
         }
 
         if (!hasFunctionalAnnotation && (hasAccessorAnnotation && !hasValueTypeAnnotation)) {
-            logger.logMissingAnnotationError(functionName, ValueTypeAnnotations.allString)
+            logger.logMissingAnnotationError(
+                interfaceName = interfaceName,
+                functionName = functionName,
+                expectedAnnotations = ValueTypeAnnotations.allString
+            )
             return false
         }
 
