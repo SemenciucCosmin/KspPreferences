@@ -20,6 +20,7 @@ android {
         targetSdk = libs.versions.targetSdk.get().toInt()
         versionCode = 1
         versionName = "1.0"
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
@@ -65,4 +66,14 @@ dependencies {
     // KSP PREFERENCES MODULES
     implementation(projects.annotations)
     ksp(projects.kspProcessor)
+
+    // TEST
+    androidTestImplementation(platform(libs.koin.bom))
+    androidTestImplementation(libs.junit)
+    androidTestImplementation(libs.junit.ext)
+    androidTestImplementation(libs.kotlinx.coroutines.test)
+    androidTestImplementation(libs.koin.android.test)
+    androidTestImplementation(libs.mockk.android)
+    androidTestImplementation(libs.test.runner)
+    androidTestImplementation(libs.turbine)
 }
