@@ -22,12 +22,6 @@ android {
         versionName = "1.0"
     }
 
-    sourceSets {
-        getByName("debug") {
-            kotlin.directories += "build/generated/ksp/debug/kotlin"
-        }
-    }
-
     buildTypes {
         release {
             isMinifyEnabled = false
