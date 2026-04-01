@@ -28,10 +28,13 @@ internal class Logger(private val logger: KSPLogger) {
         )
     }
 
-    fun logUnnecessaryReturnTypeError(functionName: String) {
+    fun logUnnecessaryReturnTypeError(
+        functionName: String,
+        annotation: String
+    ) {
         logger.error(
             """
-            Function $functionName is annotated with @Set but has a return type.
+            Function $functionName is annotated with $annotation but has a return type.
             Please ensure that $functionName does not have a return type.
             """.trimIndent()
         )
@@ -56,6 +59,15 @@ internal class Logger(private val logger: KSPLogger) {
             """
             Function $functionName is not a suspending function.
             Please ensure that $functionName is a suspending function.
+            """.trimIndent()
+        )
+    }
+
+    fun logParameterOverloadError(functionName: String) {
+        logger.error(
+            """
+            Function $functionName surpassed the parameter count threshold.
+            Please ensure that $functionName respects the parameters limits.
             """.trimIndent()
         )
     }

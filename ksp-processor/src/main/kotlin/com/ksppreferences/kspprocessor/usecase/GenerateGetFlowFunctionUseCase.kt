@@ -14,7 +14,7 @@ internal class GenerateGetFlowFunctionUseCase {
         return buildString {
             appendLine(
                 """ 
-                |    override suspend fun $functionName(): Flow<$preferencesDefaultValueType> {
+                |    override fun $functionName(): Flow<$preferencesDefaultValueType> {
                 |        return context.dataStore.data.map { it[$preferencesKeyName] ?: $preferencesDefaultValue }
                 |    }
                 """.trimMargin()

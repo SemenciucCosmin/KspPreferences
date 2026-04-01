@@ -27,7 +27,7 @@ internal class GenerateCompanionObjectUseCase(
         val preferencesPairs = interfaceDeclaration.getAllFunctions().mapNotNull { function ->
             val (preferencesKeyName, _, preferencesDefaultValueType) = getValueTypeAnnotationData(
                 function = function
-            ) ?: return@mapNotNull null
+            )
 
             val preferencesType = when (preferencesDefaultValueType) {
                 Boolean::class.simpleName -> BOOLEAN_PREFERENCES_KEY_NAME

@@ -1,6 +1,7 @@
 package com.ksppreferences.sample.data.preferences
 
 import com.ksppreferences.annotations.BooleanPreference
+import com.ksppreferences.annotations.Clear
 import com.ksppreferences.annotations.Get
 import com.ksppreferences.annotations.GetFlow
 import com.ksppreferences.annotations.IntPreference
@@ -9,8 +10,8 @@ import com.ksppreferences.annotations.Set
 import com.ksppreferences.annotations.StringPreference
 import kotlinx.coroutines.flow.Flow
 
-@Preferences(name = "TEST_PREFERENCES")
-interface TestPreferences {
+@Preferences(name = "SAMPLE_PREFERENCES")
+interface SamplePreferences {
 
     // ------------------------------ BOOLEAN ------------------------------
     @Get
@@ -19,7 +20,7 @@ interface TestPreferences {
 
     @GetFlow
     @BooleanPreference(key = KEY_BOOLEAN, defaultValue = false)
-    suspend fun getBooleanFlow(): Flow<Boolean>
+    fun getBooleanFlow(): Flow<Boolean>
 
     @Set
     @BooleanPreference(key = KEY_BOOLEAN, defaultValue = false)
@@ -32,7 +33,7 @@ interface TestPreferences {
 
     @GetFlow
     @IntPreference(key = KEY_INT, defaultValue = 0)
-    suspend fun getIntFlow(): Flow<Int>
+    fun getIntFlow(): Flow<Int>
 
     @Set
     @IntPreference(key = KEY_INT, defaultValue = 0)
@@ -45,11 +46,14 @@ interface TestPreferences {
 
     @GetFlow
     @StringPreference(key = KEY_STRING, defaultValue = "")
-    suspend fun getStringFlow(): Flow<String>
+    fun getStringFlow(): Flow<String>
 
     @Set
     @StringPreference(key = KEY_STRING, defaultValue = "")
     suspend fun setString(value: String)
+
+    @Clear
+    suspend fun clear()
 
     companion object {
         private const val KEY_BOOLEAN = "KEY_BOOLEAN"

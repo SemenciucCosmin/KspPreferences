@@ -16,15 +16,12 @@ import kotlin.sequences.forEach
 internal class GenerateClearFunctionUseCase {
 
     @OptIn(KspExperimental::class)
-    operator fun invoke(
-        functionName: String,
-        returnType: String,
-        preferencesKey: String,
-    ): String {
+    operator fun invoke(functionName: String): String {
+        println("GenerateClearFunctionUseCase")
         return buildString {
             appendLine(
                 """ 
-                |   override suspend fun clear() {
+                |   override suspend fun $functionName() {
                 |       context.dataStore.edit { it.clear() }
                 |   }
                 """.trimMargin()

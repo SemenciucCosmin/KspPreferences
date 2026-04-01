@@ -22,18 +22,26 @@ internal class ValidateGetFunctionDeclarationUseCase(
 
         val preferencesDefaultValueType = getValueTypeAnnotationData(
             function = function
-        )?.third ?: return false
+        ).third ?: return false
 
         val declaration = function.returnType?.resolve()?.declaration
         val returnType = declaration?.simpleName?.asString() ?: return false
 
-        return (preferencesDefaultValueType == returnType).ifNot {
+        if (function.parameters.isNotEmpty()) {
+            logger.logParameterOverloadError(
+                functionName = functionName,
+            )
+        }
+
+        if (preferencesDefaultValueType != returnType) {
             logger.logMismatchedReturnTypeError(
                 functionName = functionName,
-                accessorAnnotation = Get::class.simpleName ?: return@ifNot,
-                valueTypeAnnotation = valueTypeAnnotation.simpleName ?: return@ifNot,
+                accessorAnnotation = Get::class.simpleName ?: return false,
+                valueTypeAnnotation = valueTypeAnnotation.simpleName ?: return false,
                 expectedReturnType = preferencesDefaultValueType,
             )
         }
+
+        return preferencesDefaultValueType == returnType && function.parameters.isEmpty()
     }
 }

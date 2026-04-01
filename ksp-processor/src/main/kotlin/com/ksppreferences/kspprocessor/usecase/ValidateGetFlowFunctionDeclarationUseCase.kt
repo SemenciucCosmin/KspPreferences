@@ -8,6 +8,7 @@ import com.ksppreferences.annotations.GetFlow
 import com.ksppreferences.kspprocessor.annotations.ValueTypeAnnotations
 import com.ksppreferences.kspprocessor.extension.ifNot
 import com.ksppreferences.kspprocessor.logger.Logger
+import kotlinx.coroutines.flow.Flow
 
 internal class ValidateGetFlowFunctionDeclarationUseCase(
     private val logger: Logger,
@@ -23,19 +24,29 @@ internal class ValidateGetFlowFunctionDeclarationUseCase(
 
         val preferencesDefaultValueType = getValueTypeAnnotationData(
             function = function
-        )?.third ?: return false
+        ).third ?: return false
 
         val arguments = function.returnType?.resolve()?.arguments
+        val declaration = function.returnType?.resolve()?.declaration
         val innerType = arguments?.firstOrNull()?.type?.resolve()
-        val returnType = innerType?.declaration?.simpleName?.asString() ?: return false
+        val outerType = declaration?.simpleName?.asString()
+        val returnType = innerType?.declaration?.simpleName?.asString()
 
-        return (preferencesDefaultValueType == returnType).ifNot {
+        if (function.parameters.isNotEmpty()) {
+            logger.logParameterOverloadError(
+                functionName = functionName,
+            )
+        }
+
+        if (preferencesDefaultValueType != returnType || outerType != Flow::class.simpleName) {
             logger.logMismatchedReturnTypeError(
                 functionName = functionName,
-                accessorAnnotation = GetFlow::class.simpleName ?: return@ifNot,
-                valueTypeAnnotation = valueTypeAnnotation.simpleName ?: return@ifNot,
+                accessorAnnotation = GetFlow::class.simpleName ?: return false,
+                valueTypeAnnotation = valueTypeAnnotation.simpleName ?: return false,
                 expectedReturnType = "Flow<$preferencesDefaultValueType>",
             )
         }
+
+        return preferencesDefaultValueType == returnType && function.parameters.isEmpty()
     }
 }

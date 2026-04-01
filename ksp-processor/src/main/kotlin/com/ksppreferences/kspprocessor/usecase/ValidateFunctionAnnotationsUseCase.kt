@@ -4,6 +4,7 @@ import com.google.devtools.ksp.KspExperimental
 import com.google.devtools.ksp.isAnnotationPresent
 import com.google.devtools.ksp.symbol.KSFunctionDeclaration
 import com.ksppreferences.kspprocessor.annotations.AccessorAnnotations
+import com.ksppreferences.kspprocessor.annotations.FunctionalAnnotations
 import com.ksppreferences.kspprocessor.annotations.ValueTypeAnnotations
 import com.ksppreferences.kspprocessor.logger.Logger
 
@@ -19,31 +20,47 @@ internal class ValidateFunctionAnnotationsUseCase(
             function.isAnnotationPresent(it)
         }
 
+        val functionalAnnotationsCount = FunctionalAnnotations.all.count {
+            function.isAnnotationPresent(it)
+        }
+
         val valueTypeAnnotationsCount = ValueTypeAnnotations.all.count {
             function.isAnnotationPresent(it)
         }
 
-        val hasValidAccessorAnnotation = accessorAnnotationsCount <= MAX_ANNOTATION_COUNT
-        val hasValidValueTypeAnnotation = valueTypeAnnotationsCount <= MAX_ANNOTATION_COUNT
+        val isAccessorAnnotationOverload = accessorAnnotationsCount > MAX_ANNOTATION_COUNT
+        val isFunctionalAnnotationOverload = functionalAnnotationsCount > MAX_ANNOTATION_COUNT
+        val isValueTypeAnnotationOverload = valueTypeAnnotationsCount > MAX_ANNOTATION_COUNT
         val hasAccessorAnnotation = accessorAnnotationsCount == MAX_ANNOTATION_COUNT
+        val hasFunctionalAnnotation = functionalAnnotationsCount == MAX_ANNOTATION_COUNT
         val hasValueTypeAnnotation = valueTypeAnnotationsCount == MAX_ANNOTATION_COUNT
 
-        if (!hasValidAccessorAnnotation) {
+        if (isAccessorAnnotationOverload) {
             logger.logConflictingAnnotationsError(functionName, AccessorAnnotations.allString)
             return false
         }
 
-        if (!hasValidValueTypeAnnotation) {
+        if (isFunctionalAnnotationOverload) {
+            logger.logConflictingAnnotationsError(functionName, FunctionalAnnotations.allString)
+            return false
+        }
+
+        if (isValueTypeAnnotationOverload) {
             logger.logConflictingAnnotationsError(functionName, ValueTypeAnnotations.allString)
             return false
         }
 
-        if (!hasAccessorAnnotation && hasValueTypeAnnotation) {
+        if (hasFunctionalAnnotation && (hasAccessorAnnotation || hasValueTypeAnnotation)) {
+            logger.logConflictingAnnotationsError(functionName, FunctionalAnnotations.allString)
+            return false
+        }
+
+        if (!hasFunctionalAnnotation && (!hasAccessorAnnotation && hasValueTypeAnnotation)) {
             logger.logMissingAnnotationError(functionName, AccessorAnnotations.allString)
             return false
         }
 
-        if (hasAccessorAnnotation && !hasValueTypeAnnotation) {
+        if (!hasFunctionalAnnotation && (hasAccessorAnnotation && !hasValueTypeAnnotation)) {
             logger.logMissingAnnotationError(functionName, ValueTypeAnnotations.allString)
             return false
         }

@@ -6,9 +6,8 @@ import com.ksppreferences.annotations.Clear
 import com.ksppreferences.kspprocessor.extension.ifNot
 import com.ksppreferences.kspprocessor.logger.Logger
 
-internal class ValidateSetFunctionDeclarationUseCase(
+internal class ValidateClearFunctionDeclarationUseCase(
     private val logger: Logger,
-    private val getValueTypeAnnotationData: GetValueTypeAnnotationData,
 ) {
 
     @OptIn(KspExperimental::class)
@@ -16,18 +15,20 @@ internal class ValidateSetFunctionDeclarationUseCase(
         val functionName = function.simpleName.asString()
         val declaration = function.returnType?.resolve()?.declaration
         val returnType = declaration?.qualifiedName?.asString()
-        val parameter = function.parameters.firstOrNull()
-        val parameterType = parameter?.type?.resolve()?.declaration?.simpleName?.asString()
-        val hasNoReturnType = returnType == Unit::class.qualifiedName
 
-        val preferencesDefaultValueType = getValueTypeAnnotationData(function).third
-        val isMatchingParameterType = parameterType == preferencesDefaultValueType
-
-        return (hasNoReturnType && isMatchingParameterType).ifNot {
+        if (returnType != Unit::class.qualifiedName) {
             logger.logUnnecessaryReturnTypeError(
                 functionName = functionName,
-                annotation = Set::class.simpleName ?: return@ifNot
+                annotation = Clear::class.simpleName ?: return false
             )
         }
+
+        if (!function.parameters.isEmpty()) {
+            logger.logParameterOverloadError(
+                functionName = functionName,
+            )
+        }
+
+        return returnType == Unit::class.qualifiedName && function.parameters.isEmpty()
     }
 }

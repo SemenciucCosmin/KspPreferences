@@ -14,6 +14,7 @@ import com.ksppreferences.kspprocessor.usecase.GenerateImportsUseCase
 import com.ksppreferences.kspprocessor.usecase.GenerateSetFunctionUseCase
 import com.ksppreferences.kspprocessor.usecase.GetPreferencesNameUseCase
 import com.ksppreferences.kspprocessor.usecase.GetValueTypeAnnotationData
+import com.ksppreferences.kspprocessor.usecase.ValidateClearFunctionDeclarationUseCase
 import com.ksppreferences.kspprocessor.usecase.ValidateFunctionAnnotationsUseCase
 import com.ksppreferences.kspprocessor.usecase.ValidateFunctionDeclarationUseCase
 import com.ksppreferences.kspprocessor.usecase.ValidateGetFlowFunctionDeclarationUseCase
@@ -34,7 +35,8 @@ internal class ProcessorProvider : SymbolProcessorProvider {
                 logger,
                 ValidateGetFunctionDeclarationUseCase(logger, GetValueTypeAnnotationData()),
                 ValidateGetFlowFunctionDeclarationUseCase(logger, GetValueTypeAnnotationData()),
-                ValidateSetFunctionDeclarationUseCase(logger)
+                ValidateSetFunctionDeclarationUseCase(logger, GetValueTypeAnnotationData()),
+                ValidateClearFunctionDeclarationUseCase(logger)
             )
         }
 

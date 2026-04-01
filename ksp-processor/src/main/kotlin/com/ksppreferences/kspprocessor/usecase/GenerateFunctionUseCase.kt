@@ -3,10 +3,12 @@ package com.ksppreferences.kspprocessor.usecase
 import com.google.devtools.ksp.KspExperimental
 import com.google.devtools.ksp.isAnnotationPresent
 import com.google.devtools.ksp.symbol.KSFunctionDeclaration
+import com.ksppreferences.annotations.Clear
 import com.ksppreferences.annotations.Get
 import com.ksppreferences.annotations.GetFlow
 import com.ksppreferences.annotations.Set
 import com.ksppreferences.kspprocessor.annotations.AccessorAnnotations
+import com.ksppreferences.kspprocessor.annotations.FunctionalAnnotations
 
 internal class GenerateFunctionUseCase(
     private val getValueTypeAnnotationData: GetValueTypeAnnotationData,
@@ -23,33 +25,41 @@ internal class GenerateFunctionUseCase(
             function.isAnnotationPresent(it)
         }
 
+        val functionalAnnotation = FunctionalAnnotations.all.firstOrNull {
+            function.isAnnotationPresent(it)
+        }
+
         val (
             preferencesKeyName,
             preferencesDefaultValue,
             preferencesDefaultValueType,
-        ) = getValueTypeAnnotationData(function) ?: return null
+        ) = getValueTypeAnnotationData(function)
 
-        return when (accessorAnnotation) {
-            Get::class -> {
+        return when {
+            accessorAnnotation == Get::class -> {
                 generateGetFunctionUseCase(
                     functionName = functionName,
-                    preferencesKeyName = preferencesKeyName,
+                    preferencesKeyName = preferencesKeyName ?: return null,
                     preferencesDefaultValue = preferencesDefaultValue.toString(),
                     preferencesDefaultValueType = preferencesDefaultValueType ?: return null,
                 )
             }
 
-            GetFlow::class -> generateGetFlowFunctionUseCase(
+            accessorAnnotation == GetFlow::class -> generateGetFlowFunctionUseCase(
                 functionName = functionName,
-                preferencesKeyName = preferencesKeyName,
+                preferencesKeyName = preferencesKeyName ?: return null,
                 preferencesDefaultValue = preferencesDefaultValue.toString(),
                 preferencesDefaultValueType = preferencesDefaultValueType ?: return null,
             )
 
-            Set::class -> generateSetFunctionUseCase(
+            accessorAnnotation == Set::class -> generateSetFunctionUseCase(
                 functionName = functionName,
-                preferencesKeyName = preferencesKeyName,
+                preferencesKeyName = preferencesKeyName ?: return null,
                 preferencesDefaultValueType = preferencesDefaultValueType ?: return null,
+            )
+
+            functionalAnnotation == Clear::class -> generateClearFunctionUseCase(
+                functionName = functionName,
             )
 
             else -> null

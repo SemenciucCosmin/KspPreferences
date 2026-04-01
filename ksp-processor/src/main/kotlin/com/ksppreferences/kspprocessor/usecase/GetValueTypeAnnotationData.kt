@@ -8,22 +8,22 @@ import com.ksppreferences.kspprocessor.annotations.ValueTypeAnnotations
 internal class GetValueTypeAnnotationData {
 
     @OptIn(KspExperimental::class)
-    operator fun invoke(function: KSFunctionDeclaration): Triple<String, Any, String?>? {
+    operator fun invoke(function: KSFunctionDeclaration): Triple<String?, Any?, String?> {
         val valueTypeAnnotation = ValueTypeAnnotations.all.firstOrNull {
             function.isAnnotationPresent(it)
         }
 
         val annotation = function.annotations.firstOrNull {
             it.shortName.asString() == valueTypeAnnotation?.simpleName
-        } ?: return null
+        }
 
-        val preferencesKeyName = annotation.arguments.firstOrNull {
+        val preferencesKeyName = annotation?.arguments?.firstOrNull {
             it.name?.asString() == PREFERENCES_KEY_NAME
-        }?.value as? String ?: return null
+        }?.value as? String
 
-        val preferencesDefaultValue = annotation.arguments.firstOrNull {
+        val preferencesDefaultValue = annotation?.arguments?.firstOrNull {
             it.name?.asString() == PREFERENCES_DEFAULT_VALUE_TYPE_NAME
-        }?.value ?: return null
+        }?.value
 
         val preferencesDefaultValueTypeName = when (preferencesDefaultValue) {
             is Boolean -> Boolean::class.simpleName
