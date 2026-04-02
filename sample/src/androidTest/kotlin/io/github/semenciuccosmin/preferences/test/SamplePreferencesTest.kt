@@ -1,9 +1,9 @@
-package io.github.semenciuccosmin.preferences
+package io.github.semenciuccosmin.preferences.test
 
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import app.cash.turbine.test
-import io.github.semenciuccosmin.preferences.di.samplePreferencesTest
+import io.github.semenciuccosmin.preferences.test.di.samplePreferencesTest
 import io.github.semenciuccosmin.preferences.sample.data.preferences.SamplePreferences
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest

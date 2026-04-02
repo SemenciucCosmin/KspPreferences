@@ -1,4 +1,4 @@
-package io.github.semenciuccosmin.preferences.di
+package io.github.semenciuccosmin.preferences.test.di
 
 import io.github.semenciuccosmin.preferences.sample.data.preferences.SamplePreferences
 import io.github.semenciuccosmin.preferences.sample.data.preferences.SamplePreferencesImpl
