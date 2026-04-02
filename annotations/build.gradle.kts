@@ -6,7 +6,7 @@ plugins {
 mavenPublishing {
     coordinates(
         groupId = "io.github.semenciuccosmin",
-        artifactId = "preference-annotations",
+        artifactId = "preferences-annotations",
         version = "1.0.0"
     )
 }

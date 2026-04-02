@@ -2,10 +2,11 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.google.ksp)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.publish)
 }
 
 android {
-    namespace = "com.ksp.preferences.sample"
+    namespace = "io.github.semenciuccosmin.preferences.sample"
     compileSdk {
         version = release(libs.versions.compileSdk.get().toInt()) {
             minorApiLevel = 1
@@ -13,7 +14,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.ksp.preferences.sample"
+        applicationId = "io.github.semenciuccosmin.preferences.sample"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
         versionCode = 1
