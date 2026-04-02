@@ -6,12 +6,30 @@ import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.ksppreferences.kspprocessor.annotations.ValueTypeAnnotations
 import com.ksppreferences.kspprocessor.logger.Logger
 
+/**
+ * Generates the `companion object` block for a DataStore preferences implementation class.
+ *
+ * The companion object contains:
+ * - A `PREFERENCES_NAME` constant holding the DataStore file name.
+ * - One typed `PreferencesKey` constant per unique preference key declared across all
+ *   value-type annotated functions in the interface (duplicates are deduplicated by key name).
+ *
+ * Returns `null` and logs an error if no valid preference pairs could be collected from
+ * the interface.
+ */
 internal class GenerateCompanionObjectUseCase(
     private val logger: Logger,
     private val getValueTypeAnnotationData: GetValueTypeAnnotationData,
     private val getPreferencesNameUseCase: GetPreferencesNameUseCase,
 ) {
 
+    /**
+     * Produces the Kotlin source string for the companion object.
+     *
+     * @param interfaceDeclaration The KSP declaration of the annotated interface.
+     * @return Kotlin source for the `companion object` block, or `null` if annotation data
+     *         is missing or invalid.
+     */
     @OptIn(KspExperimental::class)
     operator fun invoke(interfaceDeclaration: KSClassDeclaration): String? {
         val interfaceName = interfaceDeclaration.simpleName.asString()

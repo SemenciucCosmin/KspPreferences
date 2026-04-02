@@ -7,8 +7,15 @@ import androidx.activity.enableEdgeToEdge
 import com.ksppreferences.sample.ui.component.MainScreen
 import com.ksppreferences.sample.ui.theme.KspPreferencesTheme
 
+/**
+ * Entry-point activity for the KSP Preferences sample application.
+ *
+ * Enables edge-to-edge rendering and hosts [MainScreen] wrapped inside
+ * [KspPreferencesTheme].
+ */
 class MainActivity : ComponentActivity() {
 
+    /** Sets up the Compose UI and enables edge-to-edge window rendering. */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

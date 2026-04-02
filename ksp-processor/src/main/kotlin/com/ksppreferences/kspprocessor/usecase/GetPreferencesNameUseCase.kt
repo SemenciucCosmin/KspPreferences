@@ -5,10 +5,24 @@ import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.ksppreferences.annotations.Preferences
 import com.ksppreferences.kspprocessor.logger.Logger
 
+/**
+ * Resolves the DataStore file name declared in the
+ * [com.ksppreferences.annotations.Preferences] annotation of an interface.
+ *
+ * Falls back to [PREFERENCES_DEFAULT_NAME] and logs an error when the annotation or its
+ * `name` argument cannot be read.
+ */
 internal class GetPreferencesNameUseCase(
     private val logger: Logger
 ) {
 
+    /**
+     * Returns the `name` parameter from the [@Preferences][Preferences] annotation on
+     * [interfaceDeclaration], or [PREFERENCES_DEFAULT_NAME] if it cannot be resolved.
+     *
+     * @param interfaceDeclaration The KSP declaration of the annotated interface.
+     * @return The DataStore file name string.
+     */
     @OptIn(KspExperimental::class)
     operator fun invoke(interfaceDeclaration: KSClassDeclaration): String {
         val interfaceName = interfaceDeclaration.simpleName.asString()

@@ -8,11 +8,31 @@ import com.ksppreferences.kspprocessor.annotations.ValueTypeAnnotations
 import com.ksppreferences.kspprocessor.logger.Logger
 import kotlinx.coroutines.flow.Flow
 
+/**
+ * Validates that a function annotated with [GetFlow] satisfies the required declaration
+ * constraints.
+ *
+ * A valid `@GetFlow` function must:
+ * - **Not** be `suspend` (the `Flow` itself is cold and non-blocking at the call site).
+ * - Return `Flow<T>` where `T` exactly matches the value type declared by the paired
+ *   value-type annotation.
+ * - Declare no parameters.
+ *
+ * Validation errors are reported via [Logger] but do not throw; the method returns `false`
+ * instead, allowing the processor to continue and surface all errors in one build pass.
+ */
 internal class ValidateGetFlowFunctionDeclarationUseCase(
     private val logger: Logger,
     private val getValueTypeAnnotationData: GetValueTypeAnnotationData,
 ) {
 
+    /**
+     * Validates the declaration of a [GetFlow]-annotated function.
+     *
+     * @param interfaceName The simple name of the enclosing interface (used in error messages).
+     * @param function      The KSP declaration of the function to validate.
+     * @return `true` if the function is valid; `false` otherwise.
+     */
     @OptIn(KspExperimental::class)
     operator fun invoke(
         interfaceName: String,

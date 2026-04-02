@@ -8,10 +8,30 @@ import com.ksppreferences.kspprocessor.annotations.FunctionalAnnotations
 import com.ksppreferences.kspprocessor.annotations.ValueTypeAnnotations
 import com.ksppreferences.kspprocessor.logger.Logger
 
+/**
+ * Validates the annotation composition of a single interface function.
+ *
+ * The rules enforced are:
+ * - At most one accessor annotation ([AccessorAnnotations]).
+ * - At most one functional annotation ([FunctionalAnnotations]).
+ * - At most one value-type annotation ([ValueTypeAnnotations]).
+ * - A functional annotation may not coexist with an accessor or value-type annotation.
+ * - An accessor annotation without a value-type annotation is invalid, and vice-versa.
+ *
+ * All violations are reported via [Logger] without throwing; `false` is returned so the
+ * processor can collect and display every problem in a single build pass.
+ */
 internal class ValidateFunctionAnnotationsUseCase(
     private val logger: Logger,
 ) {
 
+    /**
+     * Validates the annotations on [function].
+     *
+     * @param interfaceName The simple name of the enclosing interface (used in error messages).
+     * @param function      The KSP declaration of the function to validate.
+     * @return `true` if all annotation constraints are satisfied; `false` otherwise.
+     */
     @OptIn(KspExperimental::class)
     operator fun invoke(
         interfaceName: String,

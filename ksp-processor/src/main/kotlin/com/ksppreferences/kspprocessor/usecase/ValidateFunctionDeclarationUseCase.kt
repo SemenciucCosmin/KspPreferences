@@ -12,6 +12,14 @@ import com.ksppreferences.kspprocessor.annotations.AccessorAnnotations
 import com.ksppreferences.kspprocessor.annotations.FunctionalAnnotations
 import com.ksppreferences.kspprocessor.logger.Logger
 
+/**
+ * Routes a validated function declaration to the correct type-specific validator based on
+ * its accessor or functional annotation.
+ *
+ * This use case is called only after [ValidateFunctionAnnotationsUseCase] has already
+ * confirmed that the annotation composition is sound, so each branch can focus solely on
+ * declaration-level rules (return type, parameter count, `suspend` modifier, etc.).
+ */
 internal class ValidateFunctionDeclarationUseCase(
     private val logger: Logger,
     private val validateGetFunctionDeclarationUseCase: ValidateGetFunctionDeclarationUseCase,
@@ -20,6 +28,14 @@ internal class ValidateFunctionDeclarationUseCase(
     private val validateClearFunctionDeclarationUseCase: ValidateClearFunctionDeclarationUseCase,
 ) {
 
+    /**
+     * Validates the declaration of [function] by delegating to the appropriate
+     * type-specific validator.
+     *
+     * @param interfaceName The simple name of the enclosing interface (used in error messages).
+     * @param function      The KSP declaration of the function to validate.
+     * @return `true` if the declaration is valid; `false` otherwise.
+     */
     @OptIn(KspExperimental::class)
     operator fun invoke(
         interfaceName: String,

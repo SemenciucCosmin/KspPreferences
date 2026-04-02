@@ -11,6 +11,13 @@ import com.ksppreferences.kspprocessor.annotations.AccessorAnnotations
 import com.ksppreferences.kspprocessor.annotations.FunctionalAnnotations
 import com.ksppreferences.kspprocessor.logger.Logger
 
+/**
+ * Dispatches code generation for a single interface function to the appropriate
+ * specialised generator based on its accessor or functional annotation.
+ *
+ * Returns `null` when the function carries no recognised annotation or when required
+ * annotation data is missing, in which case a detailed error is logged via [Logger].
+ */
 internal class GenerateFunctionUseCase(
     private val logger: Logger,
     private val getValueTypeAnnotationData: GetValueTypeAnnotationData,
@@ -20,6 +27,13 @@ internal class GenerateFunctionUseCase(
     private val generateClearFunctionUseCase: GenerateClearFunctionUseCase,
 ) {
 
+    /**
+     * Generates Kotlin source code for a single interface function override.
+     *
+     * @param interfaceName The simple name of the enclosing interface (used for error messages).
+     * @param function      The KSP declaration of the function to generate.
+     * @return The Kotlin source string for the override, or `null` if generation failed.
+     */
     @OptIn(KspExperimental::class)
     operator fun invoke(
         interfaceName: String,

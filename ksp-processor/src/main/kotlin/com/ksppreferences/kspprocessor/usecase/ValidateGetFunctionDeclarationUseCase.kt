@@ -7,11 +7,29 @@ import com.ksppreferences.annotations.Get
 import com.ksppreferences.kspprocessor.annotations.ValueTypeAnnotations
 import com.ksppreferences.kspprocessor.logger.Logger
 
+/**
+ * Validates that a function annotated with [Get] satisfies the required declaration
+ * constraints.
+ *
+ * A valid `@Get` function must:
+ * - Return the type that matches the value type declared by the paired value-type annotation.
+ * - Declare no parameters.
+ *
+ * Validation errors are reported via [Logger] but do not throw; the method returns `false`
+ * instead, allowing the processor to continue and surface all errors in one build pass.
+ */
 internal class ValidateGetFunctionDeclarationUseCase(
     private val logger: Logger,
     private val getValueTypeAnnotationData: GetValueTypeAnnotationData,
 ) {
 
+    /**
+     * Validates the declaration of a [Get]-annotated function.
+     *
+     * @param interfaceName The simple name of the enclosing interface (used in error messages).
+     * @param function      The KSP declaration of the function to validate.
+     * @return `true` if the function is valid; `false` otherwise.
+     */
     @OptIn(KspExperimental::class)
     operator fun invoke(
         interfaceName: String,

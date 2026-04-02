@@ -12,6 +12,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 
+/**
+ * Root screen composable for the KSP Preferences sample application.
+ *
+ * Displays a centred welcome message inside a [Scaffold] that respects system window
+ * insets via its padding values.
+ */
 @Composable
 fun MainScreen() {
     Scaffold { paddingValues ->

@@ -5,12 +5,29 @@ import com.google.devtools.ksp.getDeclaredFunctions
 import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.ksppreferences.kspprocessor.logger.Logger
 
+/**
+ * Validates every declared function in a [com.ksppreferences.annotations.Preferences]-annotated
+ * interface, combining annotation composition checks and declaration-level checks.
+ *
+ * Processing is not short-circuited on the first failure: all functions are visited so that
+ * every error can be reported to the developer in a single build pass.
+ *
+ * @see ValidateFunctionAnnotationsUseCase
+ * @see ValidateFunctionDeclarationUseCase
+ */
 internal class ValidateInterfaceUseCase(
     private val logger: Logger,
     private val validateFunctionAnnotationsUseCase: ValidateFunctionAnnotationsUseCase,
     private val validateFunctionDeclarationUseCase: ValidateFunctionDeclarationUseCase,
 ) {
 
+    /**
+     * Validates all declared functions in [interfaceDeclaration].
+     *
+     * @param interfaceDeclaration The KSP declaration of the annotated interface.
+     * @return `true` only when every function in the interface passes both annotation and
+     *         declaration validation; `false` if any function is invalid.
+     */
     @OptIn(KspExperimental::class)
     operator fun invoke(interfaceDeclaration: KSClassDeclaration): Boolean {
         val interfaceName = interfaceDeclaration.simpleName.asString()

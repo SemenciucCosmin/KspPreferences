@@ -12,8 +12,25 @@ import com.ksppreferences.annotations.LongPreference
 import com.ksppreferences.annotations.StringPreference
 import com.ksppreferences.kspprocessor.annotations.ValueTypeAnnotations
 
+/**
+ * Generates the package declaration and import block for a DataStore preferences
+ * implementation file.
+ *
+ * Only the `preferencesKey` factory functions that are actually needed by the annotated
+ * interface are included (e.g. `booleanPreferencesKey` is omitted when the interface
+ * declares no [BooleanPreference] functions). All other DataStore and coroutine imports
+ * are always emitted.
+ */
 internal class GenerateImportsUseCase {
 
+    /**
+     * Produces the Kotlin source string containing the package statement and all required
+     * import declarations for the given interface's implementation.
+     *
+     * @param interfaceDeclaration The KSP declaration of the annotated interface.
+     * @return A Kotlin source string ending with a newline, ready to be prepended to the
+     *         generated implementation file.
+     */
     @OptIn(KspExperimental::class)
     operator fun invoke(interfaceDeclaration: KSClassDeclaration): String {
         val packageName = interfaceDeclaration.packageName.asString()

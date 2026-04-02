@@ -7,6 +7,21 @@ import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.ksppreferences.kspprocessor.logger.Logger
 import kotlin.sequences.forEach
 
+/**
+ * Orchestrates generation of the complete `*Impl` source file for a
+ * [com.ksppreferences.annotations.Preferences]-annotated interface.
+ *
+ * The generated file contains:
+ * 1. Package declaration and required imports (via [GenerateImportsUseCase]).
+ * 2. A top-level `private val Context.dataStore` extension property backed by
+ *    [androidx.datastore.preferences.preferencesDataStore]. Placing this at file scope
+ *    ensures a single DataStore instance is shared across all usages, avoiding the
+ *    "multiple DataStores active for the same file" error.
+ * 3. The implementation class with overrides for every declared function
+ *    (via [GenerateFunctionUseCase]).
+ * 4. A `companion object` containing the DataStore name constant and all typed preference
+ *    keys (via [GenerateCompanionObjectUseCase]).
+ */
 internal class GenerateImplementationUseCase(
     private val logger: Logger,
     private val codeGenerator: CodeGenerator,
@@ -16,6 +31,11 @@ internal class GenerateImplementationUseCase(
     private val getPreferencesNameUseCase: GetPreferencesNameUseCase,
 ) {
 
+    /**
+     * Generates and writes the implementation source file for [interfaceDeclaration].
+     *
+     * @param interfaceDeclaration The KSP class declaration of the annotated interface.
+     */
     @OptIn(KspExperimental::class)
     operator fun invoke(interfaceDeclaration: KSClassDeclaration) {
         val packageName = interfaceDeclaration.packageName.asString()

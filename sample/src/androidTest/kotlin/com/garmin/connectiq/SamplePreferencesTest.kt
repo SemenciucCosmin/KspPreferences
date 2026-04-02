@@ -19,16 +19,37 @@ import org.koin.test.KoinTest
 import org.koin.test.inject
 import kotlin.test.assertEquals
 
+/**
+ * Instrumented tests for [SamplePreferences], covering every value type and operation
+ * (one-shot get, reactive `Flow` get, set, and clear).
+ *
+ * ## Lifecycle design
+ * Koin is started **once per test class** (in [beforeClass]) and stopped in [afterClass].
+ * This keeps the [SamplePreferences] singleton alive across all test methods, ensuring
+ * a single [androidx.datastore.preferences.core.Preferences] DataStore file is open at a
+ * time and avoiding the "multiple DataStores active for the same file" error.
+ *
+ * [setUp] clears all stored values before each test method so that tests remain
+ * independent of one another without needing to recreate the Koin container.
+ */
 @RunWith(AndroidJUnit4::class)
 class SamplePreferencesTest : KoinTest {
 
     private val samplePreferences: SamplePreferences by inject()
 
+    /**
+     * Resets the DataStore state before each test so that every test starts from a clean
+     * slate without restarting the Koin container.
+     */
     @Before
     fun setUp() {
         runBlocking { samplePreferences.clear() }
     }
 
+    /**
+     * Verifies that [SamplePreferences.getBoolean] / [SamplePreferences.setBoolean] /
+     * [SamplePreferences.getBooleanFlow] round-trip correctly.
+     */
     @Test
     fun testBoolean() = runTest {
         assertEquals(
@@ -60,6 +81,10 @@ class SamplePreferencesTest : KoinTest {
         }
     }
 
+    /**
+     * Verifies that [SamplePreferences.getByteArray] / [SamplePreferences.setByteArray] /
+     * [SamplePreferences.getByteArrayFlow] round-trip correctly.
+     */
     @Test
     fun testByeArray() = runTest {
         assertEquals(
@@ -91,6 +116,10 @@ class SamplePreferencesTest : KoinTest {
         }
     }
 
+    /**
+     * Verifies that [SamplePreferences.getDouble] / [SamplePreferences.setDouble] /
+     * [SamplePreferences.getDoubleFlow] round-trip correctly.
+     */
     @Test
     fun testDouble() = runTest {
         assertEquals(
@@ -122,6 +151,10 @@ class SamplePreferencesTest : KoinTest {
         }
     }
 
+    /**
+     * Verifies that [SamplePreferences.getFloat] / [SamplePreferences.setFloat] /
+     * [SamplePreferences.getFloatFlow] round-trip correctly.
+     */
     @Test
     fun testFloat() = runTest {
         assertEquals(
@@ -153,6 +186,10 @@ class SamplePreferencesTest : KoinTest {
         }
     }
 
+    /**
+     * Verifies that [SamplePreferences.getInt] / [SamplePreferences.setInt] /
+     * [SamplePreferences.getIntFlow] round-trip correctly.
+     */
     @Test
     fun testInt() = runTest {
         assertEquals(
@@ -184,6 +221,10 @@ class SamplePreferencesTest : KoinTest {
         }
     }
 
+    /**
+     * Verifies that [SamplePreferences.getLong] / [SamplePreferences.setLong] /
+     * [SamplePreferences.getLongFlow] round-trip correctly.
+     */
     @Test
     fun testLong() = runTest {
         assertEquals(
@@ -215,6 +256,10 @@ class SamplePreferencesTest : KoinTest {
         }
     }
 
+    /**
+     * Verifies that [SamplePreferences.getString] / [SamplePreferences.setString] /
+     * [SamplePreferences.getStringFlow] round-trip correctly.
+     */
     @Test
     fun testString() = runTest {
         assertEquals(
@@ -246,6 +291,10 @@ class SamplePreferencesTest : KoinTest {
         }
     }
 
+    /**
+     * Verifies that [SamplePreferences.clear] resets every value type back to its declared
+     * default after values have been explicitly written.
+     */
     @Test
     fun testClear() = runTest {
         assertEquals(
@@ -331,6 +380,11 @@ class SamplePreferencesTest : KoinTest {
 
     companion object {
 
+        /**
+         * Starts the Koin container once for the entire test class, registering
+         * [SamplePreferences] as a singleton backed by the instrumentation [android.app.Application]
+         * context.
+         */
         @BeforeClass
         @JvmStatic
         fun beforeClass() {
@@ -341,6 +395,9 @@ class SamplePreferencesTest : KoinTest {
             }
         }
 
+        /**
+         * Stops the Koin container after all test methods in this class have run.
+         */
         @AfterClass
         @JvmStatic
         fun afterClass() {
