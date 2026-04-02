@@ -13,7 +13,6 @@ import com.ksp.preferences.sample.ui.theme.KspPreferencesTheme
  * Enables edge-to-edge rendering and hosts [MainScreen] wrapped inside
  * [KspPreferencesTheme].
  *
- * ./gradlew -Psigning.password=KeystoreKspPreferences generatePgpKeys --name "Semenciuc Cosmin"
  */
 class MainActivity : ComponentActivity() {
 
