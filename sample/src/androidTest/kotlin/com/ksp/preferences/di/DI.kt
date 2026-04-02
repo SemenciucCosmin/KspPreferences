@@ -1,0 +1,17 @@
+package com.ksp.preferences.di
+
+import com.ksp.preferences.sample.data.preferences.SamplePreferences
+import com.ksp.preferences.sample.data.preferences.SamplePreferencesImpl
+import org.koin.dsl.module
+
+/**
+ * Koin module used exclusively by instrumented tests.
+ *
+ * Registers [SamplePreferences] as a **singleton** so that every test in the suite shares
+ * the same [SamplePreferencesImpl] instance and therefore the same underlying DataStore.
+ * This prevents the "multiple DataStores active for the same file" error that arises when
+ * more than one [SamplePreferencesImpl] is alive at once.
+ */
+fun samplePreferencesTest() = module {
+    single<SamplePreferences> { SamplePreferencesImpl(get()) }
+}

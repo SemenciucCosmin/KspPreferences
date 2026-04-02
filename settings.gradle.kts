@@ -26,5 +26,5 @@ rootProject.name = "KspPreferences"
 include(
     ":sample",
     ":annotations",
-    ":ksp-processor"
+    ":compiler"
 )

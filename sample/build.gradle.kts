@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.google.ksp)
@@ -7,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.ksppreferences.smaple"
+    namespace = "com.ksp.preferences.sample"
     compileSdk {
         version = release(libs.versions.compileSdk.get().toInt()) {
             minorApiLevel = 1
@@ -15,7 +13,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.ksppreferences.sample"
+        applicationId = "com.ksp.preferences.sample"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
         versionCode = 1
@@ -65,7 +63,7 @@ dependencies {
 
     // KSP PREFERENCES MODULES
     implementation(projects.annotations)
-    ksp(projects.kspProcessor)
+    ksp(projects.compiler)
 
     // TEST
     androidTestImplementation(platform(libs.koin.bom))
