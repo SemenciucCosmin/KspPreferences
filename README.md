@@ -97,6 +97,22 @@ val name by prefs.getUsernameFlow().collectAsState(initial = "")
 
 ---
 
+## 🏭 PreferencesFactory
+
+`PreferencesFactory` is a lightweight helper that instantiates the generated `*Impl` class for you using reflection — no DI framework required.
+
+```kotlin
+import io.github.semenciuccosmin.preferences.factory.PreferencesFactory
+
+val prefs: UserPreferences = PreferencesFactory.create(context)
+```
+
+The type parameter `T` is reified, so the factory resolves the correct `UserPreferencesImpl` automatically at runtime.
+
+> **Note** If you are already using a DI framework (e.g. Hilt, Koin) prefer binding the generated `*Impl` directly as a singleton inside your DI module. `PreferencesFactory` is intended for cases where a full DI setup is not available or desired.
+
+---
+
 ## 🗂 Annotation Reference
 
 ### Class-level
