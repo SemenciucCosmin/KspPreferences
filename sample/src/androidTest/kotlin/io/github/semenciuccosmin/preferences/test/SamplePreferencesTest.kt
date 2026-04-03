@@ -3,6 +3,7 @@ package io.github.semenciuccosmin.preferences.test
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import app.cash.turbine.test
+import io.github.semenciuccosmin.preferences.sample.data.model.SampleObject
 import io.github.semenciuccosmin.preferences.test.di.samplePreferencesTest
 import io.github.semenciuccosmin.preferences.sample.data.preferences.SamplePreferences
 import kotlinx.coroutines.runBlocking
@@ -77,41 +78,6 @@ class SamplePreferencesTest : KoinTest {
             assertEquals(
                 expected = true,
                 actual = awaitItem()
-            )
-        }
-    }
-
-    /**
-     * Verifies that [SamplePreferences.getByteArray] / [SamplePreferences.setByteArray] /
-     * [SamplePreferences.getByteArrayFlow] round-trip correctly.
-     */
-    @Test
-    fun testByeArray() = runTest {
-        assertEquals(
-            expected = byteArrayOf().toList(),
-            actual = samplePreferences.getByteArray().toList()
-        )
-
-        samplePreferences.setByteArray(byteArrayOf(1, 2, 3))
-
-        assertEquals(
-            expected = byteArrayOf(1, 2, 3).toList(),
-            actual = samplePreferences.getByteArray().toList()
-        )
-
-        samplePreferences.clear()
-
-        samplePreferences.getByteArrayFlow().test {
-            assertEquals(
-                expected = byteArrayOf().toList(),
-                actual = awaitItem().toList()
-            )
-
-            samplePreferences.setByteArray(byteArrayOf(1, 2, 3))
-
-            assertEquals(
-                expected = byteArrayOf(1, 2, 3).toList(),
-                actual = awaitItem().toList()
             )
         }
     }
@@ -257,6 +223,54 @@ class SamplePreferencesTest : KoinTest {
     }
 
     /**
+     * Verifies that [SamplePreferences.getObject] / [SamplePreferences.setObject] /
+     * [SamplePreferences.getObjectFlow] round-trip correctly for a serializable [SampleObject].
+     */
+    @Test
+    fun testObject() = runTest {
+        assertEquals(
+            expected = null,
+            actual = samplePreferences.getObject()
+        )
+
+        val sampleObject = SampleObject(id = "sample_object_id", name = "sample_object_name")
+        samplePreferences.setObject(sampleObject)
+        val storedSampleObject = samplePreferences.getObject()
+
+        assertEquals(
+            expected = sampleObject.id,
+            actual = storedSampleObject?.id
+        )
+
+        assertEquals(
+            expected = sampleObject.name,
+            actual = storedSampleObject?.name
+        )
+
+        samplePreferences.clear()
+
+        samplePreferences.getObjectFlow().test {
+            assertEquals(
+                expected = null,
+                actual = awaitItem()
+            )
+
+            samplePreferences.setObject(sampleObject)
+            val storedSampleObject = awaitItem()
+
+            assertEquals(
+                expected = sampleObject.id,
+                actual = storedSampleObject?.id
+            )
+
+            assertEquals(
+                expected = sampleObject.name,
+                actual = storedSampleObject?.name
+            )
+        }
+    }
+
+    /**
      * Verifies that [SamplePreferences.getString] / [SamplePreferences.setString] /
      * [SamplePreferences.getStringFlow] round-trip correctly.
      */
@@ -303,11 +317,6 @@ class SamplePreferencesTest : KoinTest {
         )
 
         assertEquals(
-            expected = byteArrayOf().toList(),
-            actual = samplePreferences.getByteArray().toList()
-        )
-
-        assertEquals(
             expected = SamplePreferences.DEFAULT_DOUBLE,
             actual = samplePreferences.getDouble()
         )
@@ -333,7 +342,6 @@ class SamplePreferencesTest : KoinTest {
         )
 
         samplePreferences.setBoolean(true)
-        samplePreferences.setByteArray(byteArrayOf(1, 2, 3))
         samplePreferences.setDouble(1.0)
         samplePreferences.setFloat(1f)
         samplePreferences.setInt(1)
@@ -345,11 +353,6 @@ class SamplePreferencesTest : KoinTest {
         assertEquals(
             expected = SamplePreferences.DEFAULT_BOOLEAN,
             actual = samplePreferences.getBoolean()
-        )
-
-        assertEquals(
-            expected = byteArrayOf().toList(),
-            actual = samplePreferences.getByteArray().toList()
         )
 
         assertEquals(

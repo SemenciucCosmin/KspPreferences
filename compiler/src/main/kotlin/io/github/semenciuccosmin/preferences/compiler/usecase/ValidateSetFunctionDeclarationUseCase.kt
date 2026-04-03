@@ -41,8 +41,8 @@ internal class ValidateSetFunctionDeclarationUseCase(
         val parameterType = parameter?.type?.resolve()?.declaration?.simpleName?.asString()
         val hasNoReturnType = returnType == Unit::class.qualifiedName
 
-        val preferencesDefaultValueType = getValueTypeAnnotationData(function).third
-        val isMatchingParameterType = parameterType == preferencesDefaultValueType
+        val annotationData = getValueTypeAnnotationData(function)
+        val isMatchingParameterType = parameterType == annotationData.typeName
 
         return (hasNoReturnType && isMatchingParameterType).ifNot {
             logger.logUnnecessaryReturnTypeError(

@@ -22,6 +22,7 @@ koin = "4.2.0"
 # KOTLIN
 kotlin = "2.3.20"
 kotlinx-coroutines = "1.10.2"
+kotlinx-serialization = "1.7.3"
 
 # KSP
 ksp = "2.3.6"
@@ -60,6 +61,7 @@ koin-core = { module = "io.insert-koin:koin-core" }
 
 # KOTLIN
 kotlinx-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
+kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 
 # KSP
 symbol-processing = { group = "com.google.devtools.ksp", name = "symbol-processing-api", version.ref = "ksp" }
@@ -78,5 +80,6 @@ android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
 google-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 publish = { id = "com.vanniktech.maven.publish", version.ref = "publish" }
 

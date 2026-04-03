@@ -13,9 +13,9 @@ import io.github.semenciuccosmin.preferences.compiler.logger.Logger
 
 /**
  * Dispatches code generation for a single interface function to the appropriate
- * specialised generator based on its accessor or functional annotation.
+ * specialized generator based on its accessor or functional annotation.
  *
- * Returns `null` when the function carries no recognised annotation or when required
+ * Returns `null` when the function carries no recognized annotation or when required
  * annotation data is missing, in which case a detailed error is logged via [Logger].
  */
 internal class GenerateFunctionUseCase(
@@ -37,9 +37,11 @@ internal class GenerateFunctionUseCase(
     @OptIn(KspExperimental::class)
     operator fun invoke(
         interfaceName: String,
-        function: KSFunctionDeclaration
+        function: KSFunctionDeclaration,
     ): String? {
         val functionName = function.simpleName.asString()
+        val annotationData = getValueTypeAnnotationData(function)
+
         val accessorAnnotation = AccessorAnnotations.all.firstOrNull {
             function.isAnnotationPresent(it)
         }
@@ -48,60 +50,55 @@ internal class GenerateFunctionUseCase(
             function.isAnnotationPresent(it)
         }
 
-        val (
-            preferencesKeyName,
-            preferencesDefaultValue,
-            preferencesDefaultValueType,
-        ) = getValueTypeAnnotationData(function)
+        val preferencesKeyName = annotationData.keyName
+        val preferencesTypeName = annotationData.typeName
 
         return when {
             accessorAnnotation == Get::class -> {
-                if (preferencesKeyName == null || preferencesDefaultValueType == null) {
+                if (preferencesKeyName == null || preferencesTypeName == null) {
                     logger.logMissingFunctionAnnotationDataError(
                         interfaceName = interfaceName,
                         functionName = functionName
                     )
+
                     return null
                 }
 
                 generateGetFunctionUseCase(
                     functionName = functionName,
-                    preferencesKeyName = preferencesKeyName,
-                    preferencesDefaultValue = preferencesDefaultValue.toString(),
-                    preferencesDefaultValueType = preferencesDefaultValueType,
+                    annotationData = annotationData,
                 )
             }
 
             accessorAnnotation == GetFlow::class -> {
-                if (preferencesKeyName == null || preferencesDefaultValueType == null) {
+                if (preferencesKeyName == null || preferencesTypeName == null) {
                     logger.logMissingFunctionAnnotationDataError(
                         interfaceName = interfaceName,
                         functionName = functionName
                     )
+
                     return null
                 }
 
                 generateGetFlowFunctionUseCase(
                     functionName = functionName,
-                    preferencesKeyName = preferencesKeyName,
-                    preferencesDefaultValue = preferencesDefaultValue.toString(),
-                    preferencesDefaultValueType = preferencesDefaultValueType,
+                    annotationData = annotationData,
                 )
             }
 
             accessorAnnotation == Set::class -> {
-                if (preferencesKeyName == null || preferencesDefaultValueType == null) {
+                if (preferencesKeyName == null || preferencesTypeName == null) {
                     logger.logMissingFunctionAnnotationDataError(
                         interfaceName = interfaceName,
                         functionName = functionName
                     )
+
                     return null
                 }
 
                 generateSetFunctionUseCase(
                     functionName = functionName,
-                    preferencesKeyName = preferencesKeyName,
-                    preferencesDefaultValueType = preferencesDefaultValueType,
+                    annotationData = annotationData,
                 )
             }
 

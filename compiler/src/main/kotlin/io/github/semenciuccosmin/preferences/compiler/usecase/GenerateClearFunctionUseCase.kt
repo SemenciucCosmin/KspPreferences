@@ -23,9 +23,9 @@ internal class GenerateClearFunctionUseCase {
         return buildString {
             appendLine(
                 """ 
-                |   override suspend fun $functionName() {
-                |       context.dataStore.edit { it.clear() }
-                |   }
+                |    override suspend fun $functionName() {
+                |        context.dataStore.edit { it.clear() }
+                |    }
                 """.trimMargin()
             )
         }

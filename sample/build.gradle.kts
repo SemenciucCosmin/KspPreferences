@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.google.ksp)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.publish)
 }
 
@@ -61,6 +62,9 @@ dependencies {
     // KOIN
     implementation(platform(libs.koin.bom))
     implementation(libs.koin.core)
+
+    // KOTLIN
+    implementation(libs.kotlinx.serialization.json)
 
     // KSP PREFERENCES MODULES
     implementation(projects.annotations)

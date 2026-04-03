@@ -1,6 +1,7 @@
 package io.github.semenciuccosmin.preferences.compiler.usecase
 
 import com.google.devtools.ksp.KspExperimental
+import com.google.devtools.ksp.getDeclaredFunctions
 import com.google.devtools.ksp.processing.CodeGenerator
 import com.google.devtools.ksp.processing.Dependencies
 import com.google.devtools.ksp.symbol.KSClassDeclaration
@@ -28,7 +29,6 @@ internal class GenerateImplementationUseCase(
     private val generateImportsUseCase: GenerateImportsUseCase,
     private val generateFunctionUseCase: GenerateFunctionUseCase,
     private val generateCompanionObjectUseCase: GenerateCompanionObjectUseCase,
-    private val getPreferencesNameUseCase: GetPreferencesNameUseCase,
 ) {
 
     /**
@@ -41,7 +41,6 @@ internal class GenerateImplementationUseCase(
         val packageName = interfaceDeclaration.packageName.asString()
         val interfaceName = interfaceDeclaration.simpleName.asString()
         val implementationName = interfaceName + IMPLEMENTATION_SUFFIX
-        val preferencesName = getPreferencesNameUseCase(interfaceDeclaration)
 
         val fileContent = buildString {
             append(generateImportsUseCase(interfaceDeclaration))
@@ -52,12 +51,12 @@ internal class GenerateImplementationUseCase(
             appendLine(
                 """ 
                 |    private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(
-                |        name = "$preferencesName"
+                |        name = PREFERENCES_NAME
                 |    )
                 """.trimMargin()
             )
 
-            interfaceDeclaration.getAllFunctions().forEach { function ->
+            interfaceDeclaration.getDeclaredFunctions().forEach { function ->
                 generateFunctionUseCase(interfaceName, function)?.let {
                     appendLine()
                     append(it)

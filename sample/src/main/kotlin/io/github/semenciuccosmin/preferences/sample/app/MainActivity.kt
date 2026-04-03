@@ -12,7 +12,6 @@ import io.github.semenciuccosmin.preferences.sample.ui.theme.KspPreferencesTheme
  *
  * Enables edge-to-edge rendering and hosts [MainScreen] wrapped inside
  * [KspPreferencesTheme].
- *
  */
 class MainActivity : ComponentActivity() {
 

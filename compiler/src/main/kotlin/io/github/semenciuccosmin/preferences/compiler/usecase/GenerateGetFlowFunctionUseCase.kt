@@ -1,6 +1,7 @@
 package io.github.semenciuccosmin.preferences.compiler.usecase
 
 import com.google.devtools.ksp.KspExperimental
+import io.github.semenciuccosmin.preferences.compiler.model.AnnotationData
 
 /**
  * Generates the source code for a `Flow`-returning getter override in a DataStore
@@ -14,28 +15,39 @@ internal class GenerateGetFlowFunctionUseCase {
     /**
      * Produces the Kotlin source string for a `Flow`-based getter override.
      *
-     * @param functionName              The exact function name as declared in the interface.
-     * @param preferencesKeyName        The companion-object constant name for the preferences key.
-     * @param preferencesDefaultValue   The literal default value to use when the key is absent.
-     * @param preferencesDefaultValueType The simple Kotlin type name (e.g. `"Int"`, `"String"`).
+     * @param functionName   The exact function name as declared in the interface.
+     * @param annotationData The resolved metadata for the preference (key, default value, type).
      * @return Kotlin source code for the override, ready to be appended to the implementation
      *         class body.
      */
     @OptIn(KspExperimental::class)
     operator fun invoke(
         functionName: String,
-        preferencesKeyName: String,
-        preferencesDefaultValue: String,
-        preferencesDefaultValueType: String,
+        annotationData: AnnotationData,
     ): String {
-        return buildString {
-            appendLine(
-                """ 
-                |    override fun $functionName(): Flow<$preferencesDefaultValueType> {
-                |        return context.dataStore.data.map { it[$preferencesKeyName] ?: $preferencesDefaultValue }
-                |    }
-                """.trimMargin()
-            )
+        return when(annotationData.objectType != null) {
+            true -> buildString {
+                appendLine(
+                    """ 
+                    |    override fun $functionName(): Flow<${annotationData.typeName}?> {
+                    |        return context.dataStore.data.map {
+                    |            val jsonString = it[${annotationData.keyName}]
+                    |            jsonString?.let { Json.decodeFromString(it) }
+                    |        }
+                    |    }
+                    """.trimMargin()
+                )
+            }
+
+            false -> buildString {
+                appendLine(
+                    """ 
+                    |    override fun $functionName(): Flow<${annotationData.typeName}> {
+                    |        return context.dataStore.data.map { it[${annotationData.keyName}] ?: ${annotationData.defaultValue} }
+                    |    }
+                    """.trimMargin()
+                )
+            }
         }
     }
 }

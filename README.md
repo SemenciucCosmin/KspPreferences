@@ -124,7 +124,6 @@ val name by prefs.getUsernameFlow().collectAsState(initial = "")
 | `@LongPreference(key, defaultValue)` | `Long` | `0L` |
 | `@FloatPreference(key, defaultValue)` | `Float` | `0f` |
 | `@DoublePreference(key, defaultValue)` | `Double` | `0.0` |
-| `@ByteArrayPreference(key, defaultValue)` | `ByteArray` | `[]` |
 
 ---
 
@@ -163,9 +162,6 @@ interface SamplePreferences {
 
     @Get    @StringPreference(key = "auth_token",  defaultValue = "")
     suspend fun getAuthToken(): String
-
-    @Get    @ByteArrayPreference(key = "avatar",  defaultValue = [])
-    suspend fun getAvatar(): ByteArray
 
     @Clear
     suspend fun clear()

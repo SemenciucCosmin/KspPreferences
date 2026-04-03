@@ -36,13 +36,10 @@ internal class ValidateGetFunctionDeclarationUseCase(
         function: KSFunctionDeclaration
     ): Boolean {
         val functionName = function.simpleName.asString()
+        val annotationData = getValueTypeAnnotationData(function)
         val valueTypeAnnotation = ValueTypeAnnotations.all.firstOrNull {
             function.isAnnotationPresent(it)
         }
-
-        val preferencesDefaultValueType = getValueTypeAnnotationData(
-            function = function
-        ).third
 
         val declaration = function.returnType?.resolve()?.declaration
         val returnType = declaration?.simpleName?.asString()
@@ -54,16 +51,16 @@ internal class ValidateGetFunctionDeclarationUseCase(
             )
         }
 
-        if (preferencesDefaultValueType != returnType) {
+        if (annotationData.typeName != returnType) {
             logger.logMismatchedReturnTypeError(
                 interfaceName = interfaceName,
                 functionName = functionName,
                 accessorAnnotation = Get::class.simpleName ?: return false,
                 valueTypeAnnotation = valueTypeAnnotation?.simpleName ?: return false,
-                expectedReturnType = preferencesDefaultValueType ?: return false,
+                expectedReturnType = annotationData.typeName ?: return false,
             )
         }
 
-        return preferencesDefaultValueType == returnType && function.parameters.isEmpty()
+        return annotationData.typeName == returnType && function.parameters.isEmpty()
     }
 }

@@ -1,14 +1,16 @@
 package io.github.semenciuccosmin.preferences.compiler.usecase
 
 import com.google.devtools.ksp.KspExperimental
+import com.google.devtools.ksp.getDeclaredFunctions
 import com.google.devtools.ksp.isAnnotationPresent
 import com.google.devtools.ksp.symbol.KSClassDeclaration
+import com.google.devtools.ksp.symbol.KSType
 import io.github.semenciuccosmin.preferences.annotations.BooleanPreference
-import io.github.semenciuccosmin.preferences.annotations.ByteArrayPreference
 import io.github.semenciuccosmin.preferences.annotations.DoublePreference
 import io.github.semenciuccosmin.preferences.annotations.FloatPreference
 import io.github.semenciuccosmin.preferences.annotations.IntPreference
 import io.github.semenciuccosmin.preferences.annotations.LongPreference
+import io.github.semenciuccosmin.preferences.annotations.ObjectPreference
 import io.github.semenciuccosmin.preferences.annotations.StringPreference
 import io.github.semenciuccosmin.preferences.compiler.annotations.ValueTypeAnnotations
 
@@ -21,7 +23,9 @@ import io.github.semenciuccosmin.preferences.compiler.annotations.ValueTypeAnnot
  * declares no [BooleanPreference] functions). All other DataStore and coroutine imports
  * are always emitted.
  */
-internal class GenerateImportsUseCase {
+internal class GenerateImportsUseCase(
+    private val getValueTypeAnnotationData: GetValueTypeAnnotationData,
+) {
 
     /**
      * Produces the Kotlin source string containing the package statement and all required
@@ -34,12 +38,17 @@ internal class GenerateImportsUseCase {
     @OptIn(KspExperimental::class)
     operator fun invoke(interfaceDeclaration: KSClassDeclaration): String {
         val packageName = interfaceDeclaration.packageName.asString()
-        val preferencesKeysImports = ValueTypeAnnotations.all.filter { annotation ->
-            interfaceDeclaration.getAllFunctions().any { it.isAnnotationPresent(annotation) }
-        }.mapNotNull { annotation ->
-            when(annotation) {
+        val allValueTypeAnnotations = ValueTypeAnnotations.all.filter { annotation ->
+            interfaceDeclaration.getDeclaredFunctions().any { it.isAnnotationPresent(annotation) }
+        }
+
+        val objects = interfaceDeclaration.getDeclaredFunctions().filter {
+            it.isAnnotationPresent(ObjectPreference::class)
+        }.mapNotNull { getValueTypeAnnotationData(it).objectType }.toList().distinct()
+
+        val preferencesKeysImports = allValueTypeAnnotations.mapNotNull { annotation ->
+            when (annotation) {
                 BooleanPreference::class -> BOOLEAN_PREFERENCES_KEY_NAME
-                ByteArrayPreference::class -> BYTE_ARRAY_PREFERENCES_KEY_NAME
                 DoublePreference::class -> DOUBLE_PREFERENCES_KEY_NAME
                 FloatPreference::class -> FLOAT_PREFERENCES_KEY_NAME
                 IntPreference::class -> INT_PREFERENCES_KEY_NAME
@@ -56,20 +65,36 @@ internal class GenerateImportsUseCase {
             appendLine("import android.content.Context")
             appendLine("import androidx.datastore.core.DataStore")
             appendLine("import androidx.datastore.preferences.core.Preferences")
+
             preferencesKeysImports.forEach {
                 appendLine("import androidx.datastore.preferences.core.$it")
             }
+
             appendLine("import androidx.datastore.preferences.core.edit")
             appendLine("import androidx.datastore.preferences.preferencesDataStore")
             appendLine("import kotlinx.coroutines.flow.Flow")
             appendLine("import kotlinx.coroutines.flow.firstOrNull")
             appendLine("import kotlinx.coroutines.flow.map")
+
+            if (ObjectPreference::class in allValueTypeAnnotations) {
+                if (StringPreference::class !in allValueTypeAnnotations) {
+                    appendLine("import androidx.datastore.preferences.core.stringPreferencesKey")
+                }
+                appendLine("import kotlinx.serialization.encodeToString")
+                appendLine("import kotlinx.serialization.json.Json")
+            }
+
+            objects.forEach {
+                val declaration = (it as? KSType)?.declaration
+                val packageName = declaration?.packageName?.asString()
+                val objectName = declaration?.simpleName?.asString()
+                appendLine("import $packageName.$objectName")
+            }
         }
     }
 
     companion object {
         private const val BOOLEAN_PREFERENCES_KEY_NAME = "booleanPreferencesKey"
-        private const val BYTE_ARRAY_PREFERENCES_KEY_NAME = "byteArrayPreferencesKey"
         private const val DOUBLE_PREFERENCES_KEY_NAME = "doublePreferencesKey"
         private const val FLOAT_PREFERENCES_KEY_NAME = "floatPreferencesKey"
         private const val INT_PREFERENCES_KEY_NAME = "intPreferencesKey"

@@ -1,11 +1,11 @@
 package io.github.semenciuccosmin.preferences.compiler.annotations
 
 import io.github.semenciuccosmin.preferences.annotations.BooleanPreference
-import io.github.semenciuccosmin.preferences.annotations.ByteArrayPreference
 import io.github.semenciuccosmin.preferences.annotations.DoublePreference
 import io.github.semenciuccosmin.preferences.annotations.FloatPreference
 import io.github.semenciuccosmin.preferences.annotations.IntPreference
 import io.github.semenciuccosmin.preferences.annotations.LongPreference
+import io.github.semenciuccosmin.preferences.annotations.ObjectPreference
 import io.github.semenciuccosmin.preferences.annotations.StringPreference
 
 /**
@@ -17,21 +17,21 @@ import io.github.semenciuccosmin.preferences.annotations.StringPreference
  *
  * Supported types:
  * - [BooleanPreference]
- * - [ByteArrayPreference]
  * - [DoublePreference]
  * - [FloatPreference]
  * - [IntPreference]
  * - [LongPreference]
+ * - [ObjectPreference]
  * - [StringPreference]
  */
 internal object ValueTypeAnnotations {
     val all = listOf(
         BooleanPreference::class,
-        ByteArrayPreference::class,
         DoublePreference::class,
         FloatPreference::class,
         IntPreference::class,
         LongPreference::class,
+        ObjectPreference::class,
         StringPreference::class,
     )
 

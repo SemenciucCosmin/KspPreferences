@@ -1,6 +1,7 @@
 package io.github.semenciuccosmin.preferences.compiler.usecase
 
 import com.google.devtools.ksp.KspExperimental
+import com.google.devtools.ksp.getDeclaredFunctions
 import com.google.devtools.ksp.isAnnotationPresent
 import com.google.devtools.ksp.symbol.KSClassDeclaration
 import io.github.semenciuccosmin.preferences.compiler.annotations.ValueTypeAnnotations
@@ -34,24 +35,22 @@ internal class GenerateCompanionObjectUseCase(
     operator fun invoke(interfaceDeclaration: KSClassDeclaration): String? {
         val interfaceName = interfaceDeclaration.simpleName.asString()
         val preferencesName = getPreferencesNameUseCase(interfaceDeclaration)
-        val valueTypeFunctions = interfaceDeclaration.getAllFunctions().filter { function ->
+        val valueTypeFunctions = interfaceDeclaration.getDeclaredFunctions().filter { function ->
             ValueTypeAnnotations.all.any { function.isAnnotationPresent(it) }
         }
 
         val preferencesPairs = valueTypeFunctions.mapNotNull { function ->
             val functionName = function.simpleName.asString()
-            val (preferencesKeyName, _, preferencesDefaultValueType) = getValueTypeAnnotationData(
-                function = function
-            )
+            val annotationData = getValueTypeAnnotationData(function)
 
-            val preferencesType = when (preferencesDefaultValueType) {
-                Boolean::class.simpleName -> BOOLEAN_PREFERENCES_KEY_NAME
-                ByteArray::class.simpleName -> BYTE_ARRAY_PREFERENCES_KEY_NAME
-                Double::class.simpleName -> DOUBLE_PREFERENCES_KEY_NAME
-                Float::class.simpleName -> FLOAT_PREFERENCES_KEY_NAME
-                Int::class.simpleName -> INT_PREFERENCES_KEY_NAME
-                Long::class.simpleName -> LONG_PREFERENCES_KEY_NAME
-                String::class.simpleName -> STRING_PREFERENCES_KEY_NAME
+            val preferencesType = when {
+                annotationData.primitiveType is Boolean -> BOOLEAN_PREFERENCES_KEY_NAME
+                annotationData.primitiveType is Double -> DOUBLE_PREFERENCES_KEY_NAME
+                annotationData.primitiveType is Float -> FLOAT_PREFERENCES_KEY_NAME
+                annotationData.primitiveType is Int -> INT_PREFERENCES_KEY_NAME
+                annotationData.primitiveType is Long -> LONG_PREFERENCES_KEY_NAME
+                annotationData.primitiveType is String -> STRING_PREFERENCES_KEY_NAME
+                annotationData.objectType != null -> STRING_PREFERENCES_KEY_NAME
                 else -> {
                     logger.logMissingFunctionAnnotationDataError(
                         interfaceName = interfaceName,
@@ -61,7 +60,7 @@ internal class GenerateCompanionObjectUseCase(
                 }
             }
 
-            preferencesKeyName to preferencesType
+            annotationData.keyName to preferencesType
         }.distinctBy { (preferencesKeyName, _) -> preferencesKeyName }.toList()
 
         if (preferencesPairs.isEmpty()) {
@@ -72,22 +71,22 @@ internal class GenerateCompanionObjectUseCase(
         return buildString {
             appendLine(
                 """
-                |   companion object {
-                |       private const val PREFERENCES_NAME = "$preferencesName"
+                |    companion object {
+                |        private const val PREFERENCES_NAME = "$preferencesName"
                 """.trimMargin()
             )
 
             preferencesPairs.forEach { (preferencesKeyName, preferencesType) ->
                 appendLine(
                     """
-                    |       private val $preferencesKeyName = $preferencesType(name = "$preferencesKeyName")
+                    |        private val $preferencesKeyName = $preferencesType(name = "$preferencesKeyName")
                     """.trimMargin()
                 )
             }
 
             appendLine(
                 """
-                |   }
+                |    }
                 """.trimMargin()
             )
         }
@@ -95,7 +94,6 @@ internal class GenerateCompanionObjectUseCase(
 
     companion object {
         private const val BOOLEAN_PREFERENCES_KEY_NAME = "booleanPreferencesKey"
-        private const val BYTE_ARRAY_PREFERENCES_KEY_NAME = "byteArrayPreferencesKey"
         private const val DOUBLE_PREFERENCES_KEY_NAME = "doublePreferencesKey"
         private const val FLOAT_PREFERENCES_KEY_NAME = "floatPreferencesKey"
         private const val INT_PREFERENCES_KEY_NAME = "intPreferencesKey"

@@ -4,6 +4,7 @@ import com.google.devtools.ksp.KspExperimental
 import com.google.devtools.ksp.isAnnotationPresent
 import com.google.devtools.ksp.symbol.KSFunctionDeclaration
 import io.github.semenciuccosmin.preferences.compiler.annotations.ValueTypeAnnotations
+import io.github.semenciuccosmin.preferences.compiler.model.AnnotationData
 
 /**
  * Extracts the key name, formatted default value, and value type from the value-type
@@ -13,7 +14,6 @@ import io.github.semenciuccosmin.preferences.compiler.annotations.ValueTypeAnnot
  * when the corresponding annotation argument cannot be resolved.
  *
  * Default-value formatting rules applied before returning:
- * - `ByteArray` (represented as `List<*>` at annotation level) → `byteArrayOf(…)` literal.
  * - `Float` → appends the `f` suffix.
  * - `String` → wraps in double quotes.
  * - All other types → plain `toString()`.
@@ -21,14 +21,15 @@ import io.github.semenciuccosmin.preferences.compiler.annotations.ValueTypeAnnot
 internal class GetValueTypeAnnotationData {
 
     /**
+     * Extracts annotation metadata from [function].
+     *
      * @param function The KSP declaration of the annotated function.
-     * @return A [Triple] of:
-     *   - `first`  — the preference key name string, or `null` if unresolvable.
-     *   - `second` — the formatted default value literal string, or `null` if unresolvable.
-     *   - `third`  — the simple Kotlin type name (e.g. `"Int"`, `"ByteArray"`), or `null`.
+     * @return An [AnnotationData] containing the key name, formatted default value, and type
+     *         information. Any field may be `null` when the corresponding annotation argument
+     *         cannot be resolved.
      */
     @OptIn(KspExperimental::class)
-    operator fun invoke(function: KSFunctionDeclaration): Triple<String?, String?, String?> {
+    operator fun invoke(function: KSFunctionDeclaration): AnnotationData {
         val valueTypeAnnotation = ValueTypeAnnotations.all.firstOrNull {
             function.isAnnotationPresent(it)
         }
@@ -45,41 +46,27 @@ internal class GetValueTypeAnnotationData {
             it.name?.asString() == PREFERENCES_DEFAULT_VALUE_TYPE_NAME
         }?.value
 
-        val preferencesDefaultValueTypeName = when (preferencesDefaultValue) {
-            is Boolean -> Boolean::class.simpleName
-            is List<*> -> ByteArray::class.simpleName
-            is Double -> Double::class.simpleName
-            is Float -> Float::class.simpleName
-            is Int -> Int::class.simpleName
-            is Long -> Long::class.simpleName
-            is String -> String::class.simpleName
-            else -> Any::class.simpleName
-        }
-
+        val preferencesClazz = annotation?.arguments?.firstOrNull {
+            it.name?.asString() == PREFERENCES_CLAZZ_NAME
+        }?.value
 
         val defaultValue = when (preferencesDefaultValue) {
-            is List<*> -> {
-                preferencesDefaultValue.toString()
-                    .replace("[", "byteArrayOf(")
-                    .replace("]", ")")
-            }
-
             is Float -> "${preferencesDefaultValue}f"
-
             is String -> "\"$preferencesDefaultValue\""
-
             else -> preferencesDefaultValue.toString()
         }
 
-        return Triple(
-            preferencesKeyName,
-            defaultValue,
-            preferencesDefaultValueTypeName
+        return AnnotationData(
+            keyName = preferencesKeyName,
+            defaultValue = defaultValue,
+            primitiveType = preferencesDefaultValue,
+            objectType = preferencesClazz
         )
     }
 
     companion object {
         private const val PREFERENCES_KEY_NAME = "key"
         private const val PREFERENCES_DEFAULT_VALUE_TYPE_NAME = "defaultValue"
+        private const val PREFERENCES_CLAZZ_NAME = "clazz"
     }
 }

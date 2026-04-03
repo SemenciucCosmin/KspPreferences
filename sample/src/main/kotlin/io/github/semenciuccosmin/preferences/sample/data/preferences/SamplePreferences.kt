@@ -1,7 +1,6 @@
 package io.github.semenciuccosmin.preferences.sample.data.preferences
 
 import io.github.semenciuccosmin.preferences.annotations.BooleanPreference
-import io.github.semenciuccosmin.preferences.annotations.ByteArrayPreference
 import io.github.semenciuccosmin.preferences.annotations.Clear
 import io.github.semenciuccosmin.preferences.annotations.DoublePreference
 import io.github.semenciuccosmin.preferences.annotations.FloatPreference
@@ -9,9 +8,11 @@ import io.github.semenciuccosmin.preferences.annotations.Get
 import io.github.semenciuccosmin.preferences.annotations.GetFlow
 import io.github.semenciuccosmin.preferences.annotations.IntPreference
 import io.github.semenciuccosmin.preferences.annotations.LongPreference
+import io.github.semenciuccosmin.preferences.annotations.ObjectPreference
 import io.github.semenciuccosmin.preferences.annotations.Preferences
 import io.github.semenciuccosmin.preferences.annotations.Set
 import io.github.semenciuccosmin.preferences.annotations.StringPreference
+import io.github.semenciuccosmin.preferences.sample.data.model.SampleObject
 import io.github.semenciuccosmin.preferences.sample.data.preferences.SamplePreferences.Companion.PREFERENCES_NAME
 import kotlinx.coroutines.flow.Flow
 
@@ -45,23 +46,6 @@ interface SamplePreferences {
     @Set
     @BooleanPreference(key = KEY_BOOLEAN, defaultValue = DEFAULT_BOOLEAN)
     suspend fun setBoolean(value: Boolean)
-
-    // ------------------------------ BYTE ARRAY ------------------------------
-
-    /** Reads the current [ByteArray] preference value. Returns an empty array when unset. */
-    @Get
-    @ByteArrayPreference(key = KEY_BYTE_ARRAY, defaultValue = [])
-    suspend fun getByteArray(): ByteArray
-
-    /** Returns a [Flow] that emits the [ByteArray] preference on every change. */
-    @GetFlow
-    @ByteArrayPreference(key = KEY_BYTE_ARRAY, defaultValue = [])
-    fun getByteArrayFlow(): Flow<ByteArray>
-
-    /** Persists [value] as the [ByteArray] preference. */
-    @Set
-    @ByteArrayPreference(key = KEY_BYTE_ARRAY, defaultValue = [])
-    suspend fun setByteArray(value: ByteArray)
 
     // ------------------------------ DOUBLE ------------------------------
 
@@ -131,6 +115,20 @@ interface SamplePreferences {
     @LongPreference(key = KEY_LONG, defaultValue = DEFAULT_LONG)
     suspend fun setLong(value: Long)
 
+    // ------------------------------ OBJECT ------------------------------
+
+    @Get
+    @ObjectPreference(key = KEY_OBJECT, clazz = SampleObject::class)
+    suspend fun getObject(): SampleObject?
+
+    @GetFlow
+    @ObjectPreference(key = KEY_OBJECT, clazz = SampleObject::class)
+    fun getObjectFlow(): Flow<SampleObject?>
+
+    @Set
+    @ObjectPreference(key = KEY_OBJECT, clazz = SampleObject::class)
+    suspend fun setObject(value: SampleObject)
+
     // ------------------------------ STRING ------------------------------
 
     /** Reads the current [String] preference value. Returns [DEFAULT_STRING] when unset. */
@@ -157,11 +155,11 @@ interface SamplePreferences {
         private const val PREFERENCES_NAME = "SAMPLE_PREFERENCES"
 
         private const val KEY_BOOLEAN = "KEY_BOOLEAN"
-        private const val KEY_BYTE_ARRAY = "KEY_BYTE_ARRAY"
         private const val KEY_DOUBLE = "KEY_DOUBLE"
         private const val KEY_FLOAT = "KEY_FLOAT"
         private const val KEY_INT = "KEY_INT"
         private const val KEY_LONG = "KEY_LONG"
+        private const val KEY_OBJECT = "KEY_OBJECT"
         private const val KEY_STRING = "KEY_STRING"
 
         /** Default value returned by [getBoolean] when the key has not been written. */

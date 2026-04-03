@@ -85,7 +85,6 @@ object KoinInitializer {
                             generateImportsUseCase = get(),
                             generateFunctionUseCase = get(),
                             generateCompanionObjectUseCase = get(),
-                            getPreferencesNameUseCase = get()
                         )
                     }
                 }

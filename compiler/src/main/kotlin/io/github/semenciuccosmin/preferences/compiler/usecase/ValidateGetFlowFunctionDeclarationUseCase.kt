@@ -39,13 +39,10 @@ internal class ValidateGetFlowFunctionDeclarationUseCase(
         function: KSFunctionDeclaration
     ): Boolean {
         val functionName = function.simpleName.asString()
+        val annotationData = getValueTypeAnnotationData(function)
         val valueTypeAnnotation = ValueTypeAnnotations.all.firstOrNull {
             function.isAnnotationPresent(it)
         }
-
-        val preferencesDefaultValueType = getValueTypeAnnotationData(
-            function = function
-        ).third
 
         val arguments = function.returnType?.resolve()?.arguments
         val declaration = function.returnType?.resolve()?.declaration
@@ -60,16 +57,16 @@ internal class ValidateGetFlowFunctionDeclarationUseCase(
             )
         }
 
-        if (preferencesDefaultValueType != returnType || outerType != Flow::class.simpleName) {
+        if (annotationData.typeName != returnType || outerType != Flow::class.simpleName) {
             logger.logMismatchedReturnTypeError(
                 interfaceName = interfaceName,
                 functionName = functionName,
                 accessorAnnotation = GetFlow::class.simpleName ?: return false,
                 valueTypeAnnotation = valueTypeAnnotation?.simpleName ?: return false,
-                expectedReturnType = "Flow<$preferencesDefaultValueType>",
+                expectedReturnType = "Flow<${annotationData.typeName}>",
             )
         }
 
-        return preferencesDefaultValueType == returnType && function.parameters.isEmpty()
+        return annotationData.typeName == returnType && function.parameters.isEmpty()
     }
 }
