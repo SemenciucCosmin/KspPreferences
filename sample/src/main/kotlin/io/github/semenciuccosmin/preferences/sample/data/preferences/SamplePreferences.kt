@@ -27,6 +27,7 @@ import kotlinx.coroutines.flow.Flow
  * Default values are exposed as public constants on the [Companion] so that test
  * assertions can reference them without hard-coding magic literals.
  */
+@Suppress("TooManyFunctions")
 @Preferences(name = PREFERENCES_NAME)
 interface SamplePreferences {
 
@@ -164,14 +165,19 @@ interface SamplePreferences {
 
         /** Default value returned by [getBoolean] when the key has not been written. */
         const val DEFAULT_BOOLEAN = false
+
         /** Default value returned by [getDouble] when the key has not been written. */
         const val DEFAULT_DOUBLE = 0.0
+
         /** Default value returned by [getFloat] when the key has not been written. */
         const val DEFAULT_FLOAT = 0f
+
         /** Default value returned by [getInt] when the key has not been written. */
         const val DEFAULT_INT = 0
+
         /** Default value returned by [getLong] when the key has not been written. */
         const val DEFAULT_LONG = 0L
+
         /** Default value returned by [getString] when the key has not been written. */
         const val DEFAULT_STRING = ""
     }

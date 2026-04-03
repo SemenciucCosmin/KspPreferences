@@ -16,13 +16,16 @@ compose-bom = "2026.03.01"
 # DATA STORE
 data-store = "1.2.1"
 
+# DETEKT
+detekt = "1.23.8"
+
 # KOIN
 koin = "4.2.0"
 
 # KOTLIN
 kotlin = "2.3.20"
 kotlinx-coroutines = "1.10.2"
-kotlinx-serialization = "1.7.3"
+kotlinx-serialization = "1.10.0"
 
 # KSP
 ksp = "2.3.6"
@@ -55,6 +58,9 @@ androidx-compose-material3 = { group = "androidx.compose.material3", name = "mat
 # DATA STORE
 data-store = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "data-store" }
 
+# DETEKT
+detekt-formatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "detekt" }
+
 # KOIN
 koin-bom = { module = "io.insert-koin:koin-bom", version.ref = "koin" }
 koin-core = { module = "io.insert-koin:koin-core" }
@@ -78,6 +84,7 @@ test-runner = { module = "androidx.test:runner", version.ref = "test-runner" }
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
+detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 google-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }

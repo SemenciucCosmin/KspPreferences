@@ -25,7 +25,7 @@ internal class GenerateSetFunctionUseCase {
         functionName: String,
         annotationData: AnnotationData,
     ): String {
-        return when(annotationData.objectType != null) {
+        return when (annotationData.objectType != null) {
             true -> buildString {
                 appendLine(
                     """ 
@@ -33,7 +33,7 @@ internal class GenerateSetFunctionUseCase {
                 |        val jsonString = Json.encodeToString(value) 
                 |        context.dataStore.edit { it[${annotationData.keyName}] = jsonString }
                 |    }
-                """.trimMargin()
+                    """.trimMargin()
                 )
             }
 
@@ -43,7 +43,7 @@ internal class GenerateSetFunctionUseCase {
                 |    override suspend fun $functionName(value: ${annotationData.typeName}) {
                 |        context.dataStore.edit { it[${annotationData.keyName}] = value }
                 |    }
-                """.trimMargin()
+                    """.trimMargin()
                 )
             }
         }

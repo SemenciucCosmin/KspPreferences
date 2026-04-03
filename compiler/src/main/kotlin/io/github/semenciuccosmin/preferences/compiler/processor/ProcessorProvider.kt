@@ -24,7 +24,8 @@ internal class ProcessorProvider : SymbolProcessorProvider {
      * configured [Processor].
      *
      * @param environment The KSP environment providing the logger and code generator.
-     * @return A [Processor] ready to process [@Preferences][io.github.semenciuccosmin.preferences.annotations.Preferences]-annotated interfaces.
+     * @return A [Processor] ready to process [@Preferences]
+     * [io.github.semenciuccosmin.preferences.annotations.Preferences]-annotated interfaces.
      */
     override fun create(environment: SymbolProcessorEnvironment): SymbolProcessor {
         KoinInitializer.initialize(

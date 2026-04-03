@@ -32,6 +32,7 @@ internal class ValidateFunctionAnnotationsUseCase(
      * @param function      The KSP declaration of the function to validate.
      * @return `true` if all annotation constraints are satisfied; `false` otherwise.
      */
+    @Suppress("ReturnCount")
     @OptIn(KspExperimental::class)
     operator fun invoke(
         interfaceName: String,

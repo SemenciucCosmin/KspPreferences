@@ -1,5 +1,9 @@
+import io.gitlab.arturbosch.detekt.extensions.DetektExtension.Companion.DEFAULT_SRC_DIR_JAVA
+import io.gitlab.arturbosch.detekt.extensions.DetektExtension.Companion.DEFAULT_SRC_DIR_KOTLIN
+
 plugins {
     alias(libs.plugins.android.application)
+    alias(libs.plugins.detekt)
     alias(libs.plugins.google.ksp)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
@@ -59,6 +63,9 @@ dependencies {
     // DATA STORE
     implementation(libs.data.store)
 
+    // DETEKT
+    detektPlugins(libs.detekt.formatting)
+
     // KOIN
     implementation(platform(libs.koin.bom))
     implementation(libs.koin.core)
@@ -80,4 +87,21 @@ dependencies {
     androidTestImplementation(libs.mockk.android)
     androidTestImplementation(libs.test.runner)
     androidTestImplementation(libs.turbine)
+}
+
+detekt {
+    source.setFrom(
+        DEFAULT_SRC_DIR_JAVA,
+        DEFAULT_SRC_DIR_KOTLIN,
+        "${project.rootDir}/annotations/$DEFAULT_SRC_DIR_JAVA",
+        "${project.rootDir}/annotations/$DEFAULT_SRC_DIR_KOTLIN",
+        "${project.rootDir}/compiler/$DEFAULT_SRC_DIR_JAVA",
+        "${project.rootDir}/compiler/$DEFAULT_SRC_DIR_KOTLIN",
+
+    )
+    buildUponDefaultConfig = true
+    parallel = true
+    autoCorrect = true
+    config.setFrom("detekt-config.yml")
+    baseline = file("detekt-baseline.xml")
 }

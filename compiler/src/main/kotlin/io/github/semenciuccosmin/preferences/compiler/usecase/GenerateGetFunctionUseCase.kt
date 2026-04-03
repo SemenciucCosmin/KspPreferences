@@ -25,7 +25,7 @@ internal class GenerateGetFunctionUseCase {
         functionName: String,
         annotationData: AnnotationData,
     ): String {
-        return when(annotationData.objectType != null) {
+        return when (annotationData.objectType != null) {
             true -> buildString {
                 appendLine(
                     """ 

@@ -9,6 +9,7 @@ import com.google.devtools.ksp.processing.KSPLogger
  * Every method delegates to [KSPLogger.error], which causes the KSP build step to fail and
  * surfaces the message in the IDE / build output alongside the relevant source location.
  */
+@Suppress("TooManyFunctions")
 internal class Logger(private val logger: KSPLogger) {
 
     /**
