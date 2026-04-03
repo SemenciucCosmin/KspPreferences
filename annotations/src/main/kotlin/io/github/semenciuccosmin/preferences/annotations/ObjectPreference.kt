@@ -14,7 +14,9 @@ import kotlin.reflect.KClass
  * absent instead of a primitive default value.
  *
  * @param key   The DataStore preferences key under which the serialized value is stored.
- * @param clazz The [KClass] of the serializable object type to store and retrieve.
+ * @param clazz The [KClass] of the object type to store and retrieve. The class **must** be
+ *              annotated with `@kotlinx.serialization.Serializable`, otherwise serialization
+ *              will fail at runtime.
  */
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.SOURCE)

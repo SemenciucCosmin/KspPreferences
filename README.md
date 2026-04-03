@@ -124,12 +124,20 @@ val name by prefs.getUsernameFlow().collectAsState(initial = "")
 | `@LongPreference(key, defaultValue)` | `Long` | `0L` |
 | `@FloatPreference(key, defaultValue)` | `Float` | `0f` |
 | `@DoublePreference(key, defaultValue)` | `Double` | `0.0` |
+| `@ObjectPreference(key, clazz)` | `T?` | `null` |
+
+> **Note** The class passed to `@ObjectPreference(clazz = ...)` must be annotated with `@Serializable` (kotlinx.serialization), otherwise serialization will fail at runtime. Object preferences always return a nullable type — `null` is yielded when the key is absent.
 
 ---
 
 ## 📐 Full Interface Example
 
 ```kotlin
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class UserProfile(val id: String, val name: String)
+
 @Preferences(name = "sample_preferences")
 interface SamplePreferences {
 
@@ -162,6 +170,16 @@ interface SamplePreferences {
 
     @Get    @StringPreference(key = "auth_token",  defaultValue = "")
     suspend fun getAuthToken(): String
+
+    // clazz must be @Serializable — returns null when the key is absent
+    @Get    @ObjectPreference(key = "profile", clazz = UserProfile::class)
+    suspend fun getProfile(): UserProfile?
+
+    @GetFlow @ObjectPreference(key = "profile", clazz = UserProfile::class)
+    fun getProfileFlow(): Flow<UserProfile?>
+
+    @Set    @ObjectPreference(key = "profile", clazz = UserProfile::class)
+    suspend fun setProfile(value: UserProfile)
 
     @Clear
     suspend fun clear()
