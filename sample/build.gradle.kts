@@ -72,6 +72,7 @@ dependencies {
 
     // TEST
     androidTestImplementation(platform(libs.koin.bom))
+    androidTestImplementation(projects.annotations)
     androidTestImplementation(libs.junit)
     androidTestImplementation(libs.junit.ext)
     androidTestImplementation(libs.kotlinx.coroutines.test)

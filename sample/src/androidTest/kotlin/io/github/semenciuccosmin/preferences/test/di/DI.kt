@@ -1,8 +1,11 @@
 package io.github.semenciuccosmin.preferences.test.di
 
+import io.github.semenciuccosmin.preferences.factory.PreferencesFactory
 import io.github.semenciuccosmin.preferences.sample.data.preferences.SamplePreferences
 import io.github.semenciuccosmin.preferences.sample.data.preferences.SamplePreferencesImpl
+import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
+
 
 /**
  * Koin module used exclusively by instrumented tests.
@@ -13,5 +16,5 @@ import org.koin.dsl.module
  * more than one [SamplePreferencesImpl] is alive at once.
  */
 fun samplePreferencesTest() = module {
-    single<SamplePreferences> { SamplePreferencesImpl(get()) }
+    single<SamplePreferences> { PreferencesFactory.create<SamplePreferences>(androidContext()) }
 }
