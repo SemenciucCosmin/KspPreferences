@@ -33,6 +33,9 @@ ksp = "2.3.6"
 # PUBLISH
 publish = "0.36.0"
 
+# SONAR
+sonar = "7.2.3.7755"
+
 # TEST
 junit = "4.13.2"
 junit-ext = "1.3.0"
@@ -89,4 +92,5 @@ google-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 publish = { id = "com.vanniktech.maven.publish", version.ref = "publish" }
+sonar = { id = "org.sonarqube", version.ref = "sonar" }
 

@@ -10,6 +10,10 @@ plugins {
     alias(libs.plugins.publish)
 }
 
+sonar {
+    isSkipProject = true
+}
+
 android {
     namespace = "io.github.semenciuccosmin.preferences.sample"
     compileSdk {
