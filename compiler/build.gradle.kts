@@ -48,7 +48,6 @@ dependencies {
     implementation(libs.symbol.processing)
 
     // KOIN
-    implementation(platform(libs.koin.bom))
     implementation(libs.koin.core)
 
     // KOTLIN

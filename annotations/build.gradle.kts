@@ -1,6 +1,24 @@
 plugins {
+    alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.publish)
-    kotlin("jvm")
+    id("com.android.library")
+}
+
+kotlin {
+    androidTarget()
+    jvm()
+    iosArm64()
+    iosSimulatorArm64()
+
+    compilerOptions {
+        freeCompilerArgs.add("-Xexpect-actual-classes")
+    }
+}
+
+android {
+    namespace = "io.github.semenciuccosmin.preferences.annotations"
+    compileSdk = 36
+    defaultConfig { minSdk = 26 }
 }
 
 mavenPublishing {
