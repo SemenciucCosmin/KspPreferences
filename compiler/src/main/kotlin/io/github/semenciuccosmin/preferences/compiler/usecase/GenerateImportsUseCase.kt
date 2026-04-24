@@ -62,7 +62,6 @@ internal class GenerateImportsUseCase(
             appendLine("package $packageName")
             appendLine()
 
-            appendLine("import android.content.Context")
             appendLine("import androidx.datastore.core.DataStore")
             appendLine("import androidx.datastore.preferences.core.Preferences")
 
@@ -71,7 +70,7 @@ internal class GenerateImportsUseCase(
             }
 
             appendLine("import androidx.datastore.preferences.core.edit")
-            appendLine("import androidx.datastore.preferences.preferencesDataStore")
+            appendLine("import io.github.semenciuccosmin.preferences.datastore.createDataStore")
             appendLine("import kotlinx.coroutines.flow.Flow")
             appendLine("import kotlinx.coroutines.flow.firstOrNull")
             appendLine("import kotlinx.coroutines.flow.map")

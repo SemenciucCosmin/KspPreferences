@@ -31,7 +31,7 @@ internal class GenerateSetFunctionUseCase {
                     """ 
                 |    override suspend fun $functionName(value: ${annotationData.typeName}) {
                 |        val jsonString = Json.encodeToString(value) 
-                |        context.dataStore.edit { it[${annotationData.keyName}] = jsonString }
+                |        dataStore.edit { it[${annotationData.keyName}] = jsonString }
                 |    }
                     """.trimMargin()
                 )
@@ -41,7 +41,7 @@ internal class GenerateSetFunctionUseCase {
                 appendLine(
                     """ 
                 |    override suspend fun $functionName(value: ${annotationData.typeName}) {
-                |        context.dataStore.edit { it[${annotationData.keyName}] = value }
+                |        dataStore.edit { it[${annotationData.keyName}] = value }
                 |    }
                     """.trimMargin()
                 )

@@ -46,12 +46,13 @@ internal class GenerateImplementationUseCase(
             append(generateImportsUseCase(interfaceDeclaration))
             appendLine()
 
-            appendLine("class $implementationName(private val context: Context) : $interfaceName {")
+            appendLine("class $implementationName(context: Any) : $interfaceName {")
             appendLine()
             appendLine(
                 """ 
-                |    private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(
-                |        name = PREFERENCES_NAME
+                |    private val dataStore: DataStore<Preferences> = createDataStore(
+                |        context = context,
+                |        name = PREFERENCES_NAME,
                 |    )
                 """.trimMargin()
             )

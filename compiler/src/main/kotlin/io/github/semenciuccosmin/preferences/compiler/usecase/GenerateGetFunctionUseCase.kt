@@ -30,7 +30,7 @@ internal class GenerateGetFunctionUseCase {
                 appendLine(
                     """ 
                     |    override suspend fun $functionName(): ${annotationData.typeName}? {
-                    |        val preferences = context.dataStore.data.firstOrNull()
+                    |        val preferences = dataStore.data.firstOrNull()
                     |        val jsonString = preferences?.get(${annotationData.keyName})
                     |        return jsonString?.let { Json.decodeFromString(it) }
                     |    }
@@ -42,7 +42,7 @@ internal class GenerateGetFunctionUseCase {
                 appendLine(
                     """ 
                     |    override suspend fun $functionName(): ${annotationData.typeName} {
-                    |        val preferences = context.dataStore.data.firstOrNull()
+                    |        val preferences = dataStore.data.firstOrNull()
                     |        return preferences?.get(${annotationData.keyName}) ?: ${annotationData.defaultValue}
                     |    }
                     """.trimMargin()

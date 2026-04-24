@@ -2,7 +2,9 @@ package io.github.semenciuccosmin.preferences.compiler.di
 
 import com.google.devtools.ksp.processing.CodeGenerator
 import com.google.devtools.ksp.processing.KSPLogger
+import com.google.devtools.ksp.processing.SymbolProcessor
 import io.github.semenciuccosmin.preferences.compiler.logger.Logger
+import io.github.semenciuccosmin.preferences.compiler.processor.Processor
 import io.github.semenciuccosmin.preferences.compiler.usecase.GenerateClearFunctionUseCase
 import io.github.semenciuccosmin.preferences.compiler.usecase.GenerateCompanionObjectUseCase
 import io.github.semenciuccosmin.preferences.compiler.usecase.GenerateFunctionUseCase
@@ -59,6 +61,12 @@ object KoinInitializer {
             modules(
                 module {
                     factory<Logger> { Logger(environmentLogger) }
+                    factory<SymbolProcessor> {
+                        Processor(
+                            validateInterfaceUseCase = get(),
+                            generateImplementationUseCase = get(),
+                        )
+                    }
 
                     factoryOf(::GetValueTypeAnnotationData)
 

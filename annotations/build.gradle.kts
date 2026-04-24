@@ -13,6 +13,13 @@ kotlin {
     compilerOptions {
         freeCompilerArgs.add("-Xexpect-actual-classes")
     }
+
+    sourceSets {
+        commonMain.dependencies {
+            implementation(libs.data.store.preferences)
+            implementation(libs.kotlinx.coroutines)
+        }
+    }
 }
 
 android {
@@ -59,4 +66,3 @@ mavenPublishing {
         }
     }
 }
-

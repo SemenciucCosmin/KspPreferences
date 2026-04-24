@@ -30,7 +30,7 @@ internal class GenerateGetFlowFunctionUseCase {
                 appendLine(
                     """ 
                     |    override fun $functionName(): Flow<${annotationData.typeName}?> {
-                    |        return context.dataStore.data.map {
+                    |        return dataStore.data.map {
                     |            val jsonString = it[${annotationData.keyName}]
                     |            jsonString?.let { Json.decodeFromString(it) }
                     |        }
@@ -43,7 +43,7 @@ internal class GenerateGetFlowFunctionUseCase {
                 appendLine(
                     """ 
                     |    override fun $functionName(): Flow<${annotationData.typeName}> {
-                    |        return context.dataStore.data.map { it[${annotationData.keyName}] ?: ${annotationData.defaultValue} }
+                    |        return dataStore.data.map { it[${annotationData.keyName}] ?: ${annotationData.defaultValue} }
                     |    }
                     """.trimMargin()
                 )
