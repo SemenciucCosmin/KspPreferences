@@ -63,6 +63,7 @@ kotlin {
 
             // KOTLINX
             implementation(libs.kotlinx.coroutines)
+            implementation(libs.kotlinx.immutableCollections)
             implementation(libs.kotlinx.serialization.json)
 
             // MODULES

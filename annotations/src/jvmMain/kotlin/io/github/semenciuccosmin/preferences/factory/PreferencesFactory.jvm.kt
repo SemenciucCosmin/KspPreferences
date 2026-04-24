@@ -1,10 +1,10 @@
 package io.github.semenciuccosmin.preferences.factory
 
 actual object PreferencesFactory {
-    actual inline fun <reified T : Any> create(context: Any): T {
+    actual inline fun <reified T : Any> create(context: Any?): T {
         val implClass = Class.forName("${T::class.qualifiedName}Impl")
         @Suppress("UNCHECKED_CAST")
-        return implClass.getDeclaredConstructor(Any::class.java).newInstance(context) as T
+        return implClass.getDeclaredConstructor().newInstance() as T
     }
 }
 
