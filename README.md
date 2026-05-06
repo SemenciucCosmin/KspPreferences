@@ -52,10 +52,10 @@ plugins {
 
 dependencies {
     // Annotations + factory
-    implementation("io.github.semenciuccosmin:preferences-annotations:1.1.0")
+    implementation("io.github.semenciuccosmin:preferences-annotations:2.0.0")
 
     // KSP processor (code generator)
-    ksp("io.github.semenciuccosmin:preferences-compiler:1.1.0")
+    ksp("io.github.semenciuccosmin:preferences-compiler:2.0.0")
 
     // Jetpack DataStore (required at runtime)
     implementation("androidx.datastore:datastore-preferences:1.2.1")
@@ -79,7 +79,7 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation("io.github.semenciuccosmin:preferences-annotations:1.1.0")
+            implementation("io.github.semenciuccosmin:preferences-annotations:2.0.0")
             implementation("androidx.datastore:datastore-preferences:1.2.1")
         }
     }
@@ -87,10 +87,10 @@ kotlin {
 
 // KSP processor for each target
 dependencies {
-    add("kspAndroid", "io.github.semenciuccosmin:preferences-compiler:1.1.0")
-    add("kspJvm", "io.github.semenciuccosmin:preferences-compiler:1.1.0")
-    add("kspIosArm64", "io.github.semenciuccosmin:preferences-compiler:1.1.0")
-    add("kspIosSimulatorArm64", "io.github.semenciuccosmin:preferences-compiler:1.1.0")
+    add("kspAndroid", "io.github.semenciuccosmin:preferences-compiler:2.0.0")
+    add("kspJvm", "io.github.semenciuccosmin:preferences-compiler:2.0.0")
+    add("kspIosArm64", "io.github.semenciuccosmin:preferences-compiler:2.0.0")
+    add("kspIosSimulatorArm64", "io.github.semenciuccosmin:preferences-compiler:2.0.0")
 }
 ```
 
@@ -329,19 +329,19 @@ val prefs: SamplePreferences = PreferencesFactory.create(context)
 
 | Artifact | Group | Version |
 |---|---|---------|
-| `preferences-annotations` | `io.github.semenciuccosmin` | `1.1.0` |
-| `preferences-compiler` | `io.github.semenciuccosmin` | `1.1.0` |
+| `preferences-annotations` | `io.github.semenciuccosmin` | `2.0.0` |
+| `preferences-compiler` | `io.github.semenciuccosmin` | `2.0.0` |
 
 **Gradle (Kotlin DSL)**
 ```kotlin
-implementation("io.github.semenciuccosmin:preferences-annotations:1.1.0")
-ksp("io.github.semenciuccosmin:preferences-compiler:1.1.0")
+implementation("io.github.semenciuccosmin:preferences-annotations:2.0.0")
+ksp("io.github.semenciuccosmin:preferences-compiler:2.0.0")
 ```
 
 **Gradle (Groovy DSL)**
 ```groovy
-implementation 'io.github.semenciuccosmin:preferences-annotations:1.1.0'
-ksp 'io.github.semenciuccosmin:preferences-compiler:1.1.0'
+implementation 'io.github.semenciuccosmin:preferences-annotations:2.0.0'
+ksp 'io.github.semenciuccosmin:preferences-compiler:2.0.0'
 ```
 
 **Maven**
@@ -349,7 +349,7 @@ ksp 'io.github.semenciuccosmin:preferences-compiler:1.1.0'
 <dependency>
     <groupId>io.github.semenciuccosmin</groupId>
     <artifactId>preferences-annotations</artifactId>
-    <version>1.1.0</version>
+    <version>2.0.0</version>
 </dependency>
 <!-- KSP processor — add via your KSP plugin config, not as a <dependency> -->
 ```

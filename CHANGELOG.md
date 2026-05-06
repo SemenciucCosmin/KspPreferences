@@ -7,6 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.0.0] — 2026-05-06
+
+### Added
+- **Kotlin Multiplatform (KMP) support** — the library now targets Android, iOS (arm64 + simulatorArm64), and JVM Desktop.
+- `@ConstructedBy(constructor)` — annotation that links a `@Preferences` interface to a `PreferencesConstructor` object, enabling reflection-free instantiation on all platforms (modelled after Room 3's `@ConstructedBy`).
+- `PreferencesConstructor<T>` — interface implemented by a KSP-generated `actual object` that provides a type-safe `initialize(context)` factory method.
+- `PreferencesFactory.create(constructor, context)` — constructor-based factory for KMP projects; works on Android, iOS, and Desktop without reflection.
+- `PreferencesFactory.create<T>(context)` — reflection-based factory for non-KMP Android/JVM projects; resolves the generated `*Impl` class via `Class.forName`.
+- `GenerateConstructorObjectUseCase` — new KSP processor use-case that generates the `actual object` (or plain `object` for non-KMP) implementing `PreferencesConstructor`.
+- `sampleAndroid` module — a traditional single-platform Android sample app demonstrating the reflection-based API without KMP.
+
+### Changed
+- `PreferencesFactory` is now an empty `object`; both `create` overloads are top-level extension functions for correct overload resolution between the constructor-based and reflection-based variants.
+- `@ConstructedBy` is optional — KMP projects use it for type-safe, reflection-free instantiation; non-KMP projects can omit it and use `PreferencesFactory.create<T>(context)` instead.
+- The KSP processor detects `expect` vs plain declarations via `Modifier.EXPECT` and conditionally generates `actual object` (KMP) or `object` (non-KMP).
+- JVM Desktop DataStore path changed from a relative `datastore/` directory to an absolute path under `~/.local/share/datastore/` for stability across different working directories.
+
+### Removed
+- The previous platform-specific `PreferencesFactory` implementations using `expect object PreferencesFactory` with `actual` members have been replaced by the new extension-function-based approach.
+
+---
+
 ## [1.1.0]
 
 ### Added
@@ -43,4 +65,3 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Sample application demonstrating all supported preference types with `@Get`, `@GetFlow`, `@Set`, and `@Clear` operations.
 - Instrumented test suite (`SamplePreferencesTest`) covering every value type and operation, using Turbine for Flow assertions.
 - Koin singleton binding for `SamplePreferences` in tests to avoid multiple DataStore instances on the same file.
-
