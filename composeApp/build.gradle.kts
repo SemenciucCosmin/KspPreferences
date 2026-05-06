@@ -19,6 +19,10 @@ kotlin {
         }
     }
 
+    compilerOptions {
+        freeCompilerArgs.add("-Xexpect-actual-classes")
+    }
+
     listOf(
         iosArm64(),
         iosSimulatorArm64()
@@ -91,6 +95,9 @@ kotlin {
         }
         jvmMain.dependencies {
             implementation(compose.desktop.currentOs)
+
+            // KOTLINX
+            implementation(libs.kotlinx.coroutines.swing)
         }
     }
 }
@@ -156,6 +163,7 @@ detekt {
         "${project.rootDir}/composeApp/src/commonMain/kotlin",
         "${project.rootDir}/composeApp/src/iosMain/kotlin",
         "${project.rootDir}/composeApp/src/jvmMain/kotlin",
+        "${project.rootDir}/sampleAndroid/src/main/kotlin",
 
         // ANNOTATIONS
         "${project.rootDir}/annotations/src/main/kotlin",

@@ -1,4 +1,4 @@
-package io.github.semenciuccosmin.preferences.sample.ui.component
+package io.github.semenciuccosmin.preferences.sampleandroid.ui.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -14,7 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import io.github.semenciuccosmin.preferences.sample.ui.viewmodel.model.SampleUiState
+import io.github.semenciuccosmin.preferences.sampleandroid.ui.viewmodel.model.SampleUiState
 
 /**
  * Root screen composable for the KSP Preferences sample application.

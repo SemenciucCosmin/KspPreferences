@@ -1,11 +1,11 @@
-package io.github.semenciuccosmin.preferences.sample.ui.viewmodel
+package io.github.semenciuccosmin.preferences.sampleandroid.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import io.github.semenciuccosmin.preferences.sample.data.model.SampleObject
-import io.github.semenciuccosmin.preferences.sample.data.preferences.SamplePreferences
-import io.github.semenciuccosmin.preferences.sample.ui.viewmodel.model.SampleUiState
-import io.github.semenciuccosmin.preferences.sample.ui.viewmodel.model.SampleUiState.Test
+import io.github.semenciuccosmin.preferences.sampleandroid.data.model.SampleObject
+import io.github.semenciuccosmin.preferences.sampleandroid.data.preferences.SamplePreferences
+import io.github.semenciuccosmin.preferences.sampleandroid.ui.viewmodel.model.SampleUiState
+import io.github.semenciuccosmin.preferences.sampleandroid.ui.viewmodel.model.SampleUiState.Test
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted

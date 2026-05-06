@@ -36,4 +36,5 @@ include(
     ":composeApp",
     ":annotations",
     ":compiler",
+    ":sampleAndroid",
 )

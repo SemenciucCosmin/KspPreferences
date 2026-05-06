@@ -29,6 +29,7 @@ internal class GenerateImplementationUseCase(
     private val generateImportsUseCase: GenerateImportsUseCase,
     private val generateFunctionUseCase: GenerateFunctionUseCase,
     private val generateCompanionObjectUseCase: GenerateCompanionObjectUseCase,
+    private val generateConstructorObjectUseCase: GenerateConstructorObjectUseCase,
 ) {
 
     /**
@@ -46,7 +47,7 @@ internal class GenerateImplementationUseCase(
             append(generateImportsUseCase(interfaceDeclaration))
             appendLine()
 
-            appendLine("class $implementationName(context: Any) : $interfaceName {")
+            appendLine("class $implementationName(context: Any?) : $interfaceName {")
             appendLine()
             appendLine(
                 """ 
@@ -83,6 +84,14 @@ internal class GenerateImplementationUseCase(
         )
 
         file.bufferedWriter().use { it.write(fileContent) }
+
+        generateConstructorObjectUseCase(
+            interfaceDeclaration,
+            packageName,
+            interfaceName,
+            implementationName,
+            interfaceFile
+        )
     }
 
     companion object {

@@ -1,4 +1,4 @@
-package io.github.semenciuccosmin.preferences.sample.ui.viewmodel.model
+package io.github.semenciuccosmin.preferences.sampleandroid.ui.viewmodel.model
 
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf

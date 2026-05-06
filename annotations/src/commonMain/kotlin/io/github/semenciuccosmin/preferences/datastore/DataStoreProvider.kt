@@ -18,7 +18,7 @@ import okio.Path
  *   - **iOS**: `Unit` (unused; the file is resolved via `NSDocumentDirectory`).
  * @param name The logical name of the preferences DataStore file.
  */
-fun createDataStore(context: Any, name: String): DataStore<Preferences> {
+fun createDataStore(context: Any?, name: String): DataStore<Preferences> {
     return PreferenceDataStoreFactory.createWithPath(
         produceFile = { dataStorePreferencesPath(context, name) }
     )
@@ -27,4 +27,4 @@ fun createDataStore(context: Any, name: String): DataStore<Preferences> {
 /**
  * Resolves the platform-specific file path for a DataStore preferences file.
  */
-expect fun dataStorePreferencesPath(context: Any, name: String): Path
+expect fun dataStorePreferencesPath(context: Any?, name: String): Path

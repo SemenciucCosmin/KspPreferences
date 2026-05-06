@@ -1,8 +1,7 @@
-package io.github.semenciuccosmin.preferences.sample.data.preferences
+package io.github.semenciuccosmin.preferences.sampleandroid.data.preferences
 
 import io.github.semenciuccosmin.preferences.annotations.BooleanPreference
 import io.github.semenciuccosmin.preferences.annotations.Clear
-import io.github.semenciuccosmin.preferences.annotations.ConstructedBy
 import io.github.semenciuccosmin.preferences.annotations.DoublePreference
 import io.github.semenciuccosmin.preferences.annotations.FloatPreference
 import io.github.semenciuccosmin.preferences.annotations.Get
@@ -13,8 +12,8 @@ import io.github.semenciuccosmin.preferences.annotations.ObjectPreference
 import io.github.semenciuccosmin.preferences.annotations.Preferences
 import io.github.semenciuccosmin.preferences.annotations.Set
 import io.github.semenciuccosmin.preferences.annotations.StringPreference
-import io.github.semenciuccosmin.preferences.sample.data.model.SampleObject
-import io.github.semenciuccosmin.preferences.sample.data.preferences.SamplePreferences.Companion.PREFERENCES_NAME
+import io.github.semenciuccosmin.preferences.sampleandroid.data.model.SampleObject
+import io.github.semenciuccosmin.preferences.sampleandroid.data.preferences.SamplePreferences.Companion.PREFERENCES_NAME
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -30,7 +29,6 @@ import kotlinx.coroutines.flow.Flow
  */
 @Suppress("TooManyFunctions")
 @Preferences(name = PREFERENCES_NAME)
-@ConstructedBy(SamplePreferencesConstructor::class)
 interface SamplePreferences {
 
     // ------------------------------ BOOLEAN ------------------------------

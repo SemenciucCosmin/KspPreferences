@@ -11,6 +11,9 @@ androidx-core = "1.18.0"
 androidx-lifecycle = "2.10.0"
 androidx-material = "1.13.0"
 
+# COMPOSE
+compose-bom = "2026.04.01"
+
 # COMPOSE MULTIPLATFORM
 compose-multiplatform = "1.10.3"
 
@@ -50,6 +53,12 @@ androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidx
 androidx-lifecycle-viewmodelCompose = { module = "org.jetbrains.androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "androidx-lifecycle" }
 androidx-material = { group = "com.google.android.material", name = "material", version.ref = "androidx-material" }
 
+# COMPOSE
+compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose-bom" }
+material3 = { group = "androidx.compose.material3", name = "material3" }
+ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
+ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+
 # COMPOSE MULTIPLATFORM
 compose-resources = { module = "org.jetbrains.compose.components:components-resources", version.ref = "compose-multiplatform" }
 compose-runtime = { module = "org.jetbrains.compose.runtime:runtime", version.ref = "compose-multiplatform" }
@@ -77,6 +86,7 @@ koin-test = { module = "io.insert-koin:koin-test", version.ref = "koin" }
 kotlinx-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 kotlinx-immutableCollections = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version.ref = "kotlinx-immutableCollections" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
+kotlinx-coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines" }
 
 # KSP
 symbol-processing = { group = "com.google.devtools.ksp", name = "symbol-processing-api", version.ref = "ksp" }

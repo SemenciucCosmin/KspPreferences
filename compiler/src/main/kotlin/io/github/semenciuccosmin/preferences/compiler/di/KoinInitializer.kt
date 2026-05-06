@@ -7,6 +7,7 @@ import io.github.semenciuccosmin.preferences.compiler.logger.Logger
 import io.github.semenciuccosmin.preferences.compiler.processor.Processor
 import io.github.semenciuccosmin.preferences.compiler.usecase.GenerateClearFunctionUseCase
 import io.github.semenciuccosmin.preferences.compiler.usecase.GenerateCompanionObjectUseCase
+import io.github.semenciuccosmin.preferences.compiler.usecase.GenerateConstructorObjectUseCase
 import io.github.semenciuccosmin.preferences.compiler.usecase.GenerateFunctionUseCase
 import io.github.semenciuccosmin.preferences.compiler.usecase.GenerateGetFlowFunctionUseCase
 import io.github.semenciuccosmin.preferences.compiler.usecase.GenerateGetFunctionUseCase
@@ -55,7 +56,7 @@ object KoinInitializer {
      */
     fun initialize(
         environmentLogger: KSPLogger,
-        codeGenerator: CodeGenerator
+        codeGenerator: CodeGenerator,
     ) {
         startKoin {
             modules(
@@ -87,12 +88,19 @@ object KoinInitializer {
                     factoryOf(::GenerateCompanionObjectUseCase)
                     factoryOf(::GenerateImportsUseCase)
                     factory {
+                        GenerateConstructorObjectUseCase(
+                            codeGenerator = codeGenerator
+                        )
+                    }
+
+                    factory {
                         GenerateImplementationUseCase(
                             logger = get(),
                             codeGenerator = codeGenerator,
                             generateImportsUseCase = get(),
                             generateFunctionUseCase = get(),
                             generateCompanionObjectUseCase = get(),
+                            generateConstructorObjectUseCase = get(),
                         )
                     }
                 }

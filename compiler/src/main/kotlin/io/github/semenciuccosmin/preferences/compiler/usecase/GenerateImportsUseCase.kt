@@ -79,7 +79,6 @@ internal class GenerateImportsUseCase(
                 if (StringPreference::class !in allValueTypeAnnotations) {
                     appendLine("import androidx.datastore.preferences.core.stringPreferencesKey")
                 }
-                appendLine("import kotlinx.serialization.encodeToString")
                 appendLine("import kotlinx.serialization.json.Json")
             }
 

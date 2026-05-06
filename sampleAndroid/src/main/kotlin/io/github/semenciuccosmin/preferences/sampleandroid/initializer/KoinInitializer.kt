@@ -1,10 +1,9 @@
-package io.github.semenciuccosmin.preferences.sample.initializer
+package io.github.semenciuccosmin.preferences.sampleandroid.initializer
 
 import io.github.semenciuccosmin.preferences.factory.PreferencesFactory
 import io.github.semenciuccosmin.preferences.factory.create
-import io.github.semenciuccosmin.preferences.sample.data.preferences.SamplePreferences
-import io.github.semenciuccosmin.preferences.sample.data.preferences.SamplePreferencesConstructor
-import io.github.semenciuccosmin.preferences.sample.ui.viewmodel.SampleViewModel
+import io.github.semenciuccosmin.preferences.sampleandroid.data.preferences.SamplePreferences
+import io.github.semenciuccosmin.preferences.sampleandroid.ui.viewmodel.SampleViewModel
 import org.koin.core.context.startKoin
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.KoinAppDeclaration
@@ -22,9 +21,7 @@ object KoinInitializer {
             modules(
                 module {
                     viewModelOf(::SampleViewModel)
-                    single<SamplePreferences> {
-                        PreferencesFactory.create(SamplePreferencesConstructor, context)
-                    }
+                    single<SamplePreferences> { PreferencesFactory.create(context) }
                 }
             )
         }

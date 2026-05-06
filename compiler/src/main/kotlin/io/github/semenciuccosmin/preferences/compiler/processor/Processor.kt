@@ -20,14 +20,15 @@ internal class Processor(
 
     override fun process(resolver: Resolver): List<KSAnnotated> {
         val preferencesAnnotationName = Preferences::class.qualifiedName ?: return emptyList()
-        resolver.getSymbolsWithAnnotation(preferencesAnnotationName)
+        val validInterfaces = resolver.getSymbolsWithAnnotation(preferencesAnnotationName)
             .filterIsInstance<KSClassDeclaration>()
             .filter { it.classKind == ClassKind.INTERFACE }
-            .forEach { interfaceDeclaration ->
-                if (validateInterfaceUseCase(interfaceDeclaration)) {
-                    generateImplementationUseCase(interfaceDeclaration)
-                }
-            }
+            .filter { validateInterfaceUseCase(it) }
+            .toList()
+
+        validInterfaces.forEach { interfaceDeclaration ->
+            generateImplementationUseCase(interfaceDeclaration)
+        }
 
         return emptyList()
     }
